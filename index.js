@@ -1,29 +1,62 @@
 const Band = require('./band');
 const fs = require('fs');
 const zlib = require('zlib');
+const fetch = require('node-fetch');
 const GeoTIFF = require('geotiff');
 const PixelType = require('./types')
 const Renderer = require('./renderer')
 const { createCanvas } = require('canvas')
 
+const {
+    getRasterInitBuffer,
+    getRendererBuffer,
+    bufferToArrayBuffer,
+    getPixelTypeFromObj,
+    writeBandValueToBuffer,
+    writeClassesToBuffer,
+    writeColorRampToBuffer
+} = require('./utils')
+
+const defaultRenderer = {
+    type: Renderer.STRETCHED,
+    definition: {
+        colorRamp: [
+            [0, 0, 0, 255],
+            [255, 255, 255, 255]
+        ]
+    }
+};
+const readFile = (path) => {
+    return fs.readFileSync(path)
+}
 class RGisFile{
+
     _buffer = Buffer.from(new ArrayBuffer(0))
     rasterMeta = {};
     bands = [];
     _offset = 0;
     options = {
-        renderer: null
+        renderer: defaultRenderer
     }
 
-    constructor(data){
+    constructor(data, options){
         if (data){
-            this._buffer = zlib.unzipSync(data);
-            this.readRasterMeta();
+            if(options){
+                this.options.renderer = options.renderer || defaultRenderer;
+            }
+            this.init(zlib.unzipSync(data));
         }
     }
 
+    init = (buffer) => {
+        this._buffer = buffer;
+        this.readRasterMeta();
+        this.readBand();
+        delete this._buffer;
+    }
+
     saveToFile = async (path) => {
-        const buf = zlib.deflateSync(this._buffer);
+        const buf = zlib.deflateSync(this.toBuffer());
         await fs.writeFileSync(path, buf)
     }
 
@@ -61,23 +94,64 @@ class RGisFile{
         this.bands.forEach(band=>band.renderer=renderer);
     }
 
+    toBuffer = () => {
+        let buffer = getRasterInitBuffer({
+            vt: this.rasterMeta['vt'].type,
+            nb: this.rasterMeta['nb'],
+            crs: this.rasterMeta['crs'],
+            x1: this.rasterMeta['x1'],
+            y1: this.rasterMeta['y1'],
+            x2: this.rasterMeta['x2'],
+            y2: this.rasterMeta['y2'],
+            xRes: this.rasterMeta['xres'],
+            yRes: this.rasterMeta['yres'],
+            nx: this.rasterMeta['nx'],
+            ny: this.rasterMeta['ny']
+        });
+        for (let i = 0; i < this.bands.length; i++) {
+            buffer = Buffer.concat([buffer, this.bands[i].toBuffer()]);
+        }
+        return buffer;
+    }
+
+    setUncompressedData = (data) => {
+        this.init(data);
+    }
+
+
+
     /***
      * Read init data
      */
-    static fromUncompressedBuffer = (data) => {
-        const rgf = new RGisFile(null)
-        rgf._buffer = data
-        rgf.readRasterMeta();
-        return rgf;
-    }
-    static fromGeoTiff = async (url, options) => {
-        let renderer = options.renderer || this.defaultRenderer;
 
-        if (typeof url !== 'string'){
-            return;
+    static fromGeoTiffFile = async (url, options) => {
+        const data = readFile(url);
+        return await this.geoTiffBufferToRgf(data, options);
+    }
+
+    static fromGeoTiffUrl = async (url, options) => {
+        const response = await fetch(url);
+        const buffer = await response.buffer();
+        return await this.geoTiffBufferToRgf(buffer, options);
+    }
+
+    static fromFile = async (url) => {
+        const data = readFile(url);
+        return new RGisFile(data);
+    }
+
+    static fromUrl = async (url) => {
+        const response = await fetch(url);
+        const data = await response.buffer();
+        return new RGisFile(data);
+    }
+
+    static geoTiffBufferToRgf = async (data, options) => {
+        const rgf = new RGisFile(null);
+        if(options){
+            rgf.options.renderer = options.renderer || defaultRenderer;
         }
-        const data = this.readFile(url);
-        const tiff = await GeoTIFF.fromArrayBuffer(this.bufferToArrayBuffer(data));
+        const tiff = await GeoTIFF.fromArrayBuffer(bufferToArrayBuffer(data));
         const image = await tiff.getImage();
         let bands = await image.readRasters();
 
@@ -87,7 +161,7 @@ class RGisFile{
             return
         }
         const bbox = image.getBoundingBox(), bytesPerPixel = bands[0].BYTES_PER_ELEMENT;
-        const vt = this.getPixelTypeFromObj(bands[0]),
+        const vt = getPixelTypeFromObj(bands[0]),
             x1 = bbox[0],
             y1 = bbox[3],
             x2 = bbox[2],
@@ -97,7 +171,7 @@ class RGisFile{
             nx = image.getWidth(),
             ny = image.getHeight();
 
-        let buffer = this.getRasterInitBuffer({
+        let buffer = getRasterInitBuffer({
             vt: vt.type, nb, crs: 4326, x1, y1, x2, y2, xRes, yRes, nx, ny
         })
 
@@ -114,153 +188,19 @@ class RGisFile{
                         min = v;
                     if (max===null || max < v)
                         max = v;
-                    this.writeBandValueToBuffer(vt.type, v, imgBuffer, ((y*bands.width)+x) * bytesPerPixel);
+                    writeBandValueToBuffer(vt.type, v, imgBuffer, ((y*bands.width)+x) * bytesPerPixel);
                 }
             }
 
             let bandMetaBuffer = Buffer.alloc(256);
-            this.writeBandValueToBuffer(vt.type, min, bandMetaBuffer, 0);
-            this.writeBandValueToBuffer(vt.type, max, bandMetaBuffer, vt.size);
+            writeBandValueToBuffer(vt.type, min, bandMetaBuffer, 0);
+            writeBandValueToBuffer(vt.type, max, bandMetaBuffer, vt.size);
             buffer = Buffer.concat([buffer, bandMetaBuffer]);
-            buffer = Buffer.concat([buffer, this.getRendererBuffer(renderer, bytesPerPixel)]);
+            buffer = Buffer.concat([buffer, getRendererBuffer(rgf.options.renderer, bytesPerPixel)]);
             buffer = Buffer.concat([buffer, imgBuffer]);
         }
-        /**
-         *
-         */
-        // const buf = zlib.deflateSync(buffer);
-        return RGisFile.fromUncompressedBuffer(buffer);
-    }
-    static fromFile = async (url) => {
-        const data = this.readFile(url);
-        return new RGisFile(data);
-    }
-    static readFile = (path) => {
-        return fs.readFileSync(path)
-    }
-    static bufferToArrayBuffer(buf) {
-        const ab = new ArrayBuffer(buf.length);
-        const view = new Uint8Array(ab);
-        for (let i = 0; i < buf.length; ++i) {
-            view[i] = buf[i];
-        }
-        return ab;
-    }
-    static getPixelTypeFromObj = (obj) => {
-        switch (obj.constructor) {
-            case Uint8Array:
-                return PixelType.UINT8;
-            case Uint16Array:
-                return PixelType.UINT16;
-            case Uint32Array:
-                return PixelType.UINT32;
-            case Int8Array:
-                return PixelType.INT8;
-            case Int16Array:
-                return PixelType.INT16;
-            case Int32Array:
-                return PixelType.INT32;
-            case Float32Array:
-                return PixelType.FLOAT64.type;
-            case Float64Array:
-                return PixelType.FLOAT64.type;
-        }
-    }
-    static writeBandValueToBuffer = (vt, value, buffer, offset) => {
-        switch (vt) {
-            case PixelType.INT8.type:
-                buffer.writeInt8(value, offset);
-                break;
-            case PixelType.INT16.type:
-                buffer.writeInt16BE(value, offset);
-                break;
-            case PixelType.INT32.type:
-                buffer.writeInt32BE(value, offset);
-                break;
-            case PixelType.UINT8.type:
-                buffer.writeUInt8(value, offset);
-                break;
-            case PixelType.UINT16.type:
-                buffer.writeUInt16BE(value, offset);
-                break;
-            case PixelType.UINT32.type:
-                buffer.writeUInt32BE(value, offset);
-                break;
-            case PixelType.FLOAT32.type:
-                buffer.writeFloatBE(value, offset);
-                break;
-            case PixelType.FLOAT64.type:
-                buffer.writeDoubleBE(value, offset);
-                break;
-        }
-        return buffer;
-    }
-    static getRasterInitBuffer = ({vt, nb, crs, x1, y1, x2, y2, xRes, yRes, nx, ny}) => {
-        let buffer = Buffer.alloc(256);
-        buffer.writeUInt8(vt, 0);
-        buffer.writeUInt8(nb, 1);
-        buffer.writeUInt16BE(crs, 2);
-        buffer.writeFloatBE(x1, 4);
-        buffer.writeFloatBE(y1, 8);
-        buffer.writeFloatBE(x2, 12);
-        buffer.writeFloatBE(y2, 16);
-        buffer.writeFloatBE(xRes, 20);
-        buffer.writeFloatBE(yRes, 24);
-        buffer.writeFloatBE(nx, 28);
-        buffer.writeFloatBE(ny, 32);
-        return buffer
-    }
-    static writeColorRampToBuffer = (buffer, colorRamp, startsAt) => {
-        for (let i = 0; i < colorRamp.length; i++) {
-            const color = colorRamp[i];
-            for (let j = 0; j < color.length; j++) {
-                const colorComp = color[j];
-                buffer.writeUInt8(colorComp, startsAt + (i*4) + j);
-            }
-        }
-        return buffer;
-    }
-    static writeClassesToBuffer = (buffer, classes, startsAt, bytePerPixel) => {
-        for (let i = 0; i < classes.length; i++) {
-            const colorClass = classes[i];
-            buffer.writeFloatBE(colorClass.min, startsAt+(i*12))
-            buffer.writeFloatBE(colorClass.max, startsAt+(i*12) + bytePerPixel)
-            buffer.writeUInt8(colorClass.color[0], startsAt+(i*12) + (2*bytePerPixel));
-            buffer.writeUInt8(colorClass.color[1], startsAt+(i*12) + (2*bytePerPixel)+1);
-            buffer.writeUInt8(colorClass.color[2], startsAt+(i*12) + (2*bytePerPixel)+2);
-            buffer.writeUInt8(colorClass.color[3], startsAt+(i*12) + (2*bytePerPixel)+3);
-        }
-        return buffer;
-    }
-    static getRendererBuffer = (renderer, bytePerPixel) => {
-        let rb = null;
-        let rendererSize = 0;
-        switch (renderer.type) {
-            case Renderer.STRETCHED:
-                rendererSize = 2 + 4*renderer.definition.colorRamp.length;
-                rb = Buffer.alloc(rendererSize);
-                rb.writeUInt8(renderer.type, 0);
-                rb.writeUInt8(renderer.definition.colorRamp.length, 1);
-                rb = this.writeColorRampToBuffer(rb, renderer.definition.colorRamp, 2);
-                break;
-            case Renderer.CLASSIFIED:
-                rendererSize = 2 + (4 * 2 + 4) * renderer.definition.classes.length;
-                rb = Buffer.alloc(rendererSize);
-                rb.writeUInt8(2, 0);
-                rb.writeUInt8(renderer.definition.classes.length, 1);
-                rb = this.writeClassesToBuffer(rb, renderer.definition.classes, 2, bytePerPixel);
-                break;
-        }
-        return rb;
-    }
-    static defaultRenderer = {
-        type: Renderer.STRETCHED,
-        definition: {
-            colorRamp: [
-                [0, 0, 0, 255],
-                [255, 255, 255, 255]
-            ]
-        }
+        rgf.setUncompressedData(buffer);
+        return rgf;
     }
 
     /***
@@ -283,11 +223,14 @@ class RGisFile{
     }
 
     readBand = () => {
+        const tempOffset = this._offset;
+        this.bands = [];
         for (let i = 0; i < this.rasterMeta['nb']; i++) {
             let band = new Band(this._buffer, this._offset, this.rasterMeta);
             this.bands.push(band);
             this._offset = band.offset;
         }
+        this._offset = tempOffset;
     }
 
 

@@ -1,7 +1,17 @@
 const fs = require('fs');
+const path = require('path')
 const { createCanvas } = require('canvas')
 const PixelType = require('./types')
 const Renderer = require('./renderer')
+const {
+    getRasterInitBuffer,
+    getRendererBuffer,
+    bufferToArrayBuffer,
+    getPixelTypeFromObj,
+    writeBandValueToBuffer,
+    writeClassesToBuffer,
+    writeColorRampToBuffer
+} = require('./utils')
 
 class Band{
     offset = 0
@@ -9,6 +19,7 @@ class Band{
     buffer = Buffer.from(new ArrayBuffer(0))
     rasterMeta = null
     canvas = createCanvas(1, 1)
+    data = []
 
     constructor(buffer, offset, rasterMeta){
         this.offset = offset;
@@ -17,6 +28,7 @@ class Band{
         this.readBandMetaData();
         this.readBandRenderer();
         this.readBandData();
+        delete this.buffer;
     }
 
     readBandMetaData = () => {
@@ -78,7 +90,6 @@ class Band{
     }
 
     readBandData = () => {
-        this.data = [];
         const typ = this.rasterMeta['vt'].type;
         for (let y = 0; y < this.rasterMeta['ny']; y++) {
             this.data[y] = [];
@@ -161,8 +172,9 @@ class Band{
         imgBuf[imgBufPos] = rgbaVal[0];
         imgBuf[imgBufPos+1] = rgbaVal[1];
         imgBuf[imgBufPos+2] = rgbaVal[2];
-        imgBuf[imgBufPos+3] = rgbaVal[3];
+        imgBuf[imgBufPos+3] = Math.floor(rgbaVal[3]*255);
     }
+
     bufferToCanvasDataUrl = (imgBuf) => {
         this.canvas = createCanvas(this.rasterMeta['nx'], this.rasterMeta['ny'])
         const ctx = this.canvas.getContext('2d');
@@ -197,9 +209,10 @@ class Band{
             yRes = this.rasterMeta['yres'],
             x1 = this.rasterMeta['x1'],
             y1 = this.rasterMeta['y1'],
+            x2 = this.rasterMeta['x2'],
+            y2 = this.rasterMeta['y2'],
             width = this.rasterMeta['nx'],
             height = this.rasterMeta['ny'];
-        const x2 = this.rasterMeta['x2'], y2 = this.rasterMeta['y2'];
         // console.log(y2)
 
         const canvas = createCanvas(256, 256);
@@ -232,6 +245,35 @@ class Band{
         const canvas = await this.getTileImage(x, y, z);
         let base64Data = canvas.toDataURL().replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
+    }
+
+    generateTiles = async (z1, z2, dirPath) => {
+        const latLngToTile = (lng, lat, zoom) => {
+            let x = (Math.floor((lng+180)/360*Math.pow(2,zoom)));
+            let y = (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)));
+            return {x,y}
+        }
+        const x1 = this.rasterMeta['x1'],
+            y1 = this.rasterMeta['y1'],
+            x2 = this.rasterMeta['x2'],
+            y2 = this.rasterMeta['y2'];
+        for (let i = z1; i <= z2; i++) {
+            const z = i;
+            const {x:tileX1, y:tileY1} = latLngToTile(x1, y1, z);
+            const {x:tileX2, y:tileY2} = latLngToTile(x2, y2, z);
+            for (let tileX = tileX1; tileX <= tileX2; tileX++) {
+                for (let tileY = tileY1; tileY < tileY2; tileY++) {
+                    console.log("Generating tile: ", z, tileX, tileY);
+                    const imgName = `${tileY}.png`;
+                    const imageDirPath = path.join(dirPath, `/${z}/${tileX}/`)
+                    if (!fs.existsSync(imageDirPath)){
+                        fs.mkdirSync(imageDirPath, { recursive: true });
+                    }
+                    await this.saveTileAsPng(tileX, tileY, z, path.join(imageDirPath, imgName));
+                }
+            }
+            // console.log(z, [tileX1, tileY1, tileX2, tileY2])
+        }
     }
 
     getRgbaForValue = (value) => {
@@ -269,6 +311,29 @@ class Band{
     saveAsPng = async (path) => {
         let base64Data = this.toDataUrl().replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
+    }
+
+    toBuffer = () => {
+        let buffer = Buffer.from('');
+        let min = null, max = null, nx = this.rasterMeta['nx'], ny = this.rasterMeta['ny'], vt = this.rasterMeta['vt'];
+        const imgBuffer = Buffer.alloc(nx * ny * vt.size);
+        for (let y = 0; y < ny; y++) {
+            for (let x = 0; x < nx; x++) {
+                const v = this.data[y][x];
+                if (min===null || min > v)
+                    min = v;
+                if (max===null || max < v)
+                    max = v;
+                writeBandValueToBuffer(vt.type, v, imgBuffer, ((y*nx)+x) * vt.size);
+            }
+        }
+        let bandMetaBuffer = Buffer.alloc(256);
+        writeBandValueToBuffer(vt.type, min, bandMetaBuffer, 0);
+        writeBandValueToBuffer(vt.type, max, bandMetaBuffer, vt.size);
+        buffer = Buffer.concat([buffer, bandMetaBuffer]);
+        buffer = Buffer.concat([buffer, getRendererBuffer(this.renderer, vt.size)]);
+        buffer = Buffer.concat([buffer, imgBuffer]);
+        return buffer;
     }
 
 }
