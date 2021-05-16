@@ -189,7 +189,7 @@ class Band{
         fs.writeFileSync(path, this.canvas.toBuffer('image/png'))
     }
 
-    getTileImage = async (x, y, z) => {
+    getTileImage = (x, y, z) => {
         const tileToLatLngBbox = (x, y, z) => {
             const lng1 = (x/Math.pow(2,z)*360-180);
             const lng2 = ((x+1)/Math.pow(2,z)*360-180);
@@ -213,7 +213,6 @@ class Band{
             y2 = this.rasterMeta['y2'],
             width = this.rasterMeta['nx'],
             height = this.rasterMeta['ny'];
-        // console.log(y2)
 
         const canvas = createCanvas(256, 256);
         const ctx = canvas.getContext('2d');
@@ -242,7 +241,7 @@ class Band{
     }
 
     saveTileAsPng = async (x, y, z, path) => {
-        const canvas = await this.getTileImage(x, y, z);
+        const canvas = this.getTileImage(x, y, z);
         let base64Data = canvas.toDataURL().replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
     }
@@ -262,7 +261,7 @@ class Band{
             const {x:tileX1, y:tileY1} = latLngToTile(x1, y1, z);
             const {x:tileX2, y:tileY2} = latLngToTile(x2, y2, z);
             for (let tileX = tileX1; tileX <= tileX2; tileX++) {
-                for (let tileY = tileY1; tileY < tileY2; tileY++) {
+                for (let tileY = tileY1; tileY <= tileY2; tileY++) {
                     console.log("Generating tile: ", z, tileX, tileY);
                     const imgName = `${tileY}.png`;
                     const imageDirPath = path.join(dirPath, `/${z}/${tileX}/`)
@@ -272,7 +271,6 @@ class Band{
                     await this.saveTileAsPng(tileX, tileY, z, path.join(imageDirPath, imgName));
                 }
             }
-            // console.log(z, [tileX1, tileY1, tileX2, tileY2])
         }
     }
 

@@ -5,10 +5,10 @@ Rgisf is a npm package for loading and rendering GIS raster data.
  
 ## Features
 
-- Adding renderers for raster bands
-- Generate and cache tiles
-- Generate tile image with renderer on the fly
-- Create rendered raster images
+- Adding custom renderers for a raster image/its bands
+- Render and save raster images
+- Generate a specific tile with the renderer
+- Generate and cache tiles at various zoom levels
 
 ## Installation
 

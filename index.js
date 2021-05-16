@@ -1,5 +1,6 @@
 const Band = require('./band');
 const fs = require('fs');
+const path = require('path');
 const zlib = require('zlib');
 const fetch = require('node-fetch');
 const GeoTIFF = require('geotiff');
@@ -61,32 +62,22 @@ class RGisFile{
     }
 
     saveAsPng = async (path) => {
-        const arr = [];
-        let bufLength = 0;
-        for (let i = 0; i < this.bands.length; i++) {
-            const bandData = this.bands[i].toUint8ClampedArray();
-            bufLength = bandData.length;
-            arr.push(bandData);
-        }
-        const imgBuf = new Uint8ClampedArray(bufLength);
-        for (let i = 0; i < bufLength; i++) {
-            let t = 0;
-            for (let j = 0; j < arr.length; j++) {
-                t += arr[j][i];
-            }
-            imgBuf[i] = t/arr.length;
-        }
-        const d = this.bufferToCanvasDataUrl(imgBuf);
+        const d = this.toDataUrl();
         let base64Data = d.replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
     }
 
-    bufferToCanvasDataUrl = (imgBuf) => {
+    bufferToCanvas = (imgBuf) => {
         const canvas = createCanvas(this.rasterMeta['nx'], this.rasterMeta['ny'])
         const ctx = canvas.getContext('2d');
         const imageData = ctx.createImageData(this.rasterMeta['nx'], this.rasterMeta['ny']);
         imageData.data.set(imgBuf);
         ctx.putImageData(imageData, 0, 0);
+        return canvas;
+    }
+
+    bufferToCanvasDataUrl = (imgBuf) => {
+        const canvas = this.bufferToCanvas(imgBuf);
         return canvas.toDataURL();
     }
 
@@ -118,14 +109,89 @@ class RGisFile{
         this.init(data);
     }
 
+    toDataUrl = () => {
+        const arr = [];
+        let bufLength = 0;
+        for (let i = 0; i < this.bands.length; i++) {
+            const bandData = this.bands[i].toUint8ClampedArray();
+            bufLength = bandData.length;
+            arr.push(bandData);
+        }
+        const imgBuf = this.mergeBandImgBuffers(bufLength, arr);
+        return this.bufferToCanvasDataUrl(imgBuf);
+    }
+
+    getTileImage = (x, y, z) => {
+        const arr = [];
+        let bufLength = 0;
+        for (let i = 0; i < this.bands.length; i++) {
+            const tileCanvas = this.bands[i].getTileImage(x, y, z);
+            const bandData = tileCanvas.getContext("2d").getImageData(0, 0, 256, 256);
+            bufLength = bandData.length;
+            arr.push(bandData);
+        }
+        const imgBuf = this.mergeBandImgBuffers(bufLength, arr);
+        const canvas = createCanvas(256, 256)
+        const ctx = canvas.getContext('2d');
+        ctx.putImageData(imgBuf, 0, 0);
+        return canvas;
+    }
+
+    saveTileAsPng = async (x, y, z, path) => {
+        const canvas = this.getTileImage(x, y, z);
+        const dataUrl = canvas.toDataURL();
+        let base64Data = dataUrl.replace(/^data:image\/png;base64,/, "");
+        await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
+    }
+
+    generateTiles = async (z1, z2, dirPath) => {
+        const latLngToTile = (lng, lat, zoom) => {
+            let x = (Math.floor((lng+180)/360*Math.pow(2,zoom)));
+            let y = (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)));
+            return {x,y}
+        }
+        const x1 = this.rasterMeta['x1'],
+            y1 = this.rasterMeta['y1'],
+            x2 = this.rasterMeta['x2'],
+            y2 = this.rasterMeta['y2'];
+        for (let i = z1; i <= z2; i++) {
+            const z = i;
+            const {x:tileX1, y:tileY1} = latLngToTile(x1, y1, z);
+            const {x:tileX2, y:tileY2} = latLngToTile(x2, y2, z);
+            for (let tileX = tileX1; tileX <= tileX2; tileX++) {
+                for (let tileY = tileY1; tileY <= tileY2; tileY++) {
+                    console.log("Generating tile: ", z, tileX, tileY);
+                    const imgName = `${tileY}.png`;
+                    const imageDirPath = path.join(dirPath, `/${z}/${tileX}/`)
+                    if (!fs.existsSync(imageDirPath)){
+                        fs.mkdirSync(imageDirPath, { recursive: true });
+                    }
+                    await this.saveTileAsPng(tileX, tileY, z, path.join(imageDirPath, imgName));
+                }
+            }
+        }
+    }
+
+    mergeBandImgBuffers = (bufLength, arr) => {
+        const imgBuf = new Uint8ClampedArray(bufLength);
+        for (let i = 0; i < bufLength; i++) {
+            let t = 0;
+            for (let j = 0; j < arr.length; j++) {
+                t += arr[j][i];
+            }
+            imgBuf[i] = t/arr.length;
+        }
+        return arr[0]
+    }
+
 
 
     /***
      * Read init data
      */
 
-    static fromGeoTiffFile = async (url, options) => {
-        const data = readFile(url);
+    static fromGeoTiffFile = async (path, options) => {
+        const data = readFile(path);
         return await this.geoTiffBufferToRgf(data, options);
     }
 
