@@ -58,7 +58,7 @@ b) From url:
           colorRamp: [[0, 0, 0, 255], [255, 255, 255, 255]]
       }
   }
-  rgis.setRenderer(renderer)
+  rgf.setRenderer(renderer)
   ```
  Currently, it supports two types of renderers: 1) Stretched 2) Classified
  - #### Stretched renderer
