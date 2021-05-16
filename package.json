@@ -1,6 +1,6 @@
 {
   "name": "rgisf",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Raster GIS file format",
   "main": "index.js",
   "scripts": {
@@ -13,9 +13,9 @@
   "author": "Manivannan K <manivannan23111996@gmail.com> (https://www.npmjs.com/~manivannank)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/manivannan23111996/rgisf/issues"
+    "url": "https://github.com/manivannan23k/rgisf/issues"
   },
-  "homepage": "https://github.com/manivannan23111996/rgisf#readme",
+  "homepage": "https://github.com/manivannan23k/rgisf#readme",
   "dependencies": {
     "canvas": "^2.7.0",
     "geotiff": "^1.0.4",
