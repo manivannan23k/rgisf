@@ -24,9 +24,9 @@ const getPixelTypeFromObj = (obj) => {
         case Int32Array:
             return PixelType.INT32;
         case Float32Array:
-            return PixelType.FLOAT64.type;
+            return PixelType.FLOAT64;
         case Float64Array:
-            return PixelType.FLOAT64.type;
+            return PixelType.FLOAT64;
     }
 }
 const writeBandValueToBuffer = (vt, value, buffer, offset) => {
