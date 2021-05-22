@@ -19,11 +19,13 @@ class Band{
     buffer = Buffer.from(new ArrayBuffer(0))
     rasterMeta = null
     canvas = createCanvas(1, 1)
+    regionFilter = null
     data = []
 
-    constructor(buffer, offset, rasterMeta){
+    constructor(buffer, offset, rasterMeta, regionFilter){
         this.offset = offset;
         this.buffer = buffer;
+        this.regionFilter = regionFilter;
         this.rasterMeta = rasterMeta;
         this.readBandMetaData();
         this.readBandRenderer();
@@ -91,13 +93,41 @@ class Band{
 
     readBandData = () => {
         const typ = this.rasterMeta['vt'].type;
-        for (let y = 0; y < this.rasterMeta['ny']; y++) {
-            this.data[y] = [];
-            for (let x = 0; x < this.rasterMeta['nx']; x++) {
-                const _ = this.readValueOfType(typ, this.offset);
-                this.offset = _.offset;
-                this.data[y][x] = _.value
+        const size = this.rasterMeta['vt'].size;
+        // console.log(this.offset, size, this.buffer.readFloatBE(this.offset+(4*4500)))
+        if (!this.regionFilter){
+            for (let y = 0; y < this.rasterMeta['ny']; y++) {
+                this.data[y] = [];
+                for (let x = 0; x < this.rasterMeta['nx']; x++) {
+                    const _ = this.readValueOfType(typ, this.offset);
+                    this.offset = _.offset;
+                    this.data[y][x] = _.value
+                }
             }
+        }else {
+            const x1 = this.rasterMeta['x1'],
+                y1 = this.rasterMeta['y1'];
+            const [dataXIndex1, dataYIndex1, dataXIndex2, dataYIndex2] = this.regionFilter.bbox;
+            const nx = this.regionFilter.nx;
+            const fnx = Math.abs(dataXIndex1-dataXIndex2),
+                fny = Math.abs(dataYIndex1-dataYIndex2);
+
+            let min = null, max = null;
+            for (let y = dataYIndex1; y < dataYIndex2; y++) {
+                this.data[(y-dataYIndex1)] = [];
+                for (let x = dataXIndex1; x < dataXIndex2; x++) {
+
+                    const offset = this.offset + (size * ((y)*nx + (x)));
+                    const _ = this.readValueOfType(typ, offset);
+                    this.data[(y-dataYIndex1)][(x-dataXIndex1)] = _.value
+                    if (min===null || min > _.value)
+                        min = _.value;
+                    if (max===null || max < _.value)
+                        max = _.value;
+                }
+            }
+
+            this.metaData = {min: min, max: max};
         }
     }
 
@@ -330,6 +360,44 @@ class Band{
         writeBandValueToBuffer(vt.type, max, bandMetaBuffer, vt.size);
         buffer = Buffer.concat([buffer, bandMetaBuffer]);
         buffer = Buffer.concat([buffer, getRendererBuffer(this.renderer, vt.size)]);
+        buffer = Buffer.concat([buffer, imgBuffer]);
+        return buffer;
+    }
+
+
+    getRegion = (fx1, fy1, fx2, fy2) => {
+        const xRes = this.rasterMeta['xres'],
+            yRes = this.rasterMeta['yres'],
+            x1 = this.rasterMeta['x1'],
+            y1 = this.rasterMeta['y1'],
+            x2 = this.rasterMeta['x2'],
+            y2 = this.rasterMeta['y2'];
+        const dataXIndex1 = Math.floor((fx1-x1)/xRes);
+        const dataYIndex1 = Math.floor((fy1-y1)/yRes);
+        const dataXIndex2 = Math.floor((fx2-x1)/xRes);
+        const dataYIndex2 = Math.floor((fy2-y1)/yRes);
+        const fvt = this.rasterMeta['vt'],
+            fnx = Math.abs(dataXIndex1-dataXIndex2),
+            fny = Math.abs(dataYIndex1-dataYIndex2);
+
+        let buffer = Buffer.from('');
+        let min = null, max = null;
+        const imgBuffer = Buffer.alloc(fnx*fny*fvt.size);
+        for (let y = dataYIndex1; y < dataYIndex2; y++) {
+            for (let x = dataXIndex1; x < dataXIndex2; x++) {
+                const v = this.data[y][x];
+                if (min===null || min > v)
+                    min = v;
+                if (max===null || max < v)
+                    max = v;
+                writeBandValueToBuffer(fvt.type, v, imgBuffer, (((y-dataYIndex1)*fnx)+(x-dataXIndex1)) * fvt.size);
+            }
+        }
+        let bandMetaBuffer = Buffer.alloc(256);
+        writeBandValueToBuffer(fvt.type, min, bandMetaBuffer, 0);
+        writeBandValueToBuffer(fvt.type, max, bandMetaBuffer, fvt.size);
+        buffer = Buffer.concat([buffer, bandMetaBuffer]);
+        buffer = Buffer.concat([buffer, getRendererBuffer(this.renderer, fvt.size)]);
         buffer = Buffer.concat([buffer, imgBuffer]);
         return buffer;
     }

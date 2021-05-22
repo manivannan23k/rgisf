@@ -37,13 +37,15 @@ class RGisFile{
     bands = [];
     _offset = 0;
     options = {
-        renderer: defaultRenderer
+        renderer: defaultRenderer,
+        bbox: null
     }
 
     constructor(data, options){
         if (data){
             if(options){
                 this.options.renderer = options.renderer || defaultRenderer;
+                this.options.bbox = options.bbox;
             }
             this.init(zlib.unzipSync(data));
         }
@@ -184,15 +186,57 @@ class RGisFile{
         return arr[0]
     }
 
+    toCompressedBuffer = () => {
+        return zlib.deflateSync(this.toBuffer());
+    }
+
+    getRegion = (fx1, fy1, fx2, fy2) => {
+        const nb = this.bands.length;
+        const xRes = this.rasterMeta['xres'],
+            yRes = this.rasterMeta['yres'],
+            x1 = this.rasterMeta['x1'],
+            y1 = this.rasterMeta['y1'];
+        const dataXIndex1 = Math.floor((fx1-x1)/xRes);
+        const dataYIndex1 = Math.floor((fy1-y1)/yRes);
+        const dataXIndex2 = Math.floor((fx2-x1)/xRes);
+        const dataYIndex2 = Math.floor((fy2-y1)/yRes);
+
+        const fvt = this.rasterMeta['vt'],
+            fxRes = this.rasterMeta['xres'],
+            fyRes = this.rasterMeta['yres'],
+            fnx = Math.abs(dataXIndex1-dataXIndex2),
+            fny = Math.abs(dataYIndex1-dataYIndex2);
+
+        let buffer = getRasterInitBuffer({
+            vt: fvt.type, nb, crs: 4326, x1: fx1, y1: fy1, x2: fx2, y2: fy2, xRes: fxRes, yRes: fyRes, nx: fnx, ny: fny
+        });
+
+        for (let bandNo = 0; bandNo < this.bands.length; bandNo++) {
+            const band = this.bands[bandNo];
+            const bandBuffer = band.getRegion(fx1, fy1, fx2, fy2)
+            buffer = Buffer.concat([buffer, bandBuffer]);
+        }
+        return RGisFile.fromUncompressedBuffer(buffer);
+    }
+
 
 
     /***
      * Read init data
      */
 
+    static fromUncompressedBuffer =  (buffer, options) => {
+        const rgf = new RGisFile(null);
+        rgf.setUncompressedData(buffer);
+        return rgf;
+    }
     static fromGeoTiffFile = async (path, options) => {
         const data = readFile(path);
         return await this.geoTiffBufferToRgf(data, options);
+    }
+
+    static fromGeoTiffBuffer = async (buffer, options) => {
+        return await this.geoTiffBufferToRgf(buffer, options);
     }
 
     static fromGeoTiffUrl = async (url, options) => {
@@ -285,6 +329,14 @@ class RGisFile{
         this.rasterMeta['yres'] = this._buffer.readFloatBE(24);
         this.rasterMeta['nx'] = this._buffer.readFloatBE(28);
         this.rasterMeta['ny'] = this._buffer.readFloatBE(32);
+        if (this.options.bbox){
+            this.rasterMeta = this.getBboxMeta(
+                this.options.bbox[0],
+                this.options.bbox[1],
+                this.options.bbox[2],
+                this.options.bbox[3]
+            )
+        }
         this._offset = 256;
     }
 
@@ -292,7 +344,7 @@ class RGisFile{
         const tempOffset = this._offset;
         this.bands = [];
         for (let i = 0; i < this.rasterMeta['nb']; i++) {
-            let band = new Band(this._buffer, this._offset, this.rasterMeta);
+            let band = new Band(this._buffer, this._offset, this.rasterMeta, this.regionFilter);
             this.bands.push(band);
             this._offset = band.offset;
         }
@@ -349,6 +401,47 @@ class RGisFile{
 
     getBands = () => {
         return this.bands
+    }
+
+    getBboxMeta = (fx1, fy1, fx2, fy2) => {
+        const nb = this.rasterMeta['nb'];
+        const xRes = this.rasterMeta['xres'],
+            yRes = this.rasterMeta['yres'],
+            x1 = this.rasterMeta['x1'],
+            y1 = this.rasterMeta['y1'];
+        const dataXIndex1 = Math.floor((fx1-x1)/Math.abs(xRes));
+        const dataYIndex1 = Math.floor((y1-fy1)/Math.abs(yRes));
+        const dataXIndex2 = Math.floor((fx2-x1)/Math.abs(xRes));
+        const dataYIndex2 = Math.floor((y1-fy2)/Math.abs(yRes));
+
+        const fvt = this.rasterMeta['vt'],
+            fxRes = this.rasterMeta['xres'],
+            fyRes = this.rasterMeta['yres'],
+            fnx = Math.abs(dataXIndex1-dataXIndex2),
+            fny = Math.abs(dataYIndex1-dataYIndex2);
+
+        this.regionFilter = {
+            bbox: [dataXIndex1, dataYIndex1, dataXIndex2, dataYIndex2],
+            nx: this.rasterMeta['nx'],
+            ny: this.rasterMeta['ny'],
+        };
+        // this.dataBbox = [dataXIndex1, dataYIndex1, dataXIndex2, dataYIndex2];
+
+        // console.log(x1, y1, fx1, fy1, fx2, fy2);
+        // console.log(this.dataBbox)
+        return {
+            vt: fvt,
+            nb,
+            crs: 4326,
+            x1: fx1,
+            y1: fy1,
+            x2: fx2,
+            y2: fy2,
+            xRes: fxRes,
+            yRes: fyRes,
+            nx: fnx,
+            ny: fny
+        };
     }
 
 }

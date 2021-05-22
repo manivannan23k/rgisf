@@ -24,7 +24,7 @@ const getPixelTypeFromObj = (obj) => {
         case Int32Array:
             return PixelType.INT32;
         case Float32Array:
-            return PixelType.FLOAT64;
+            return PixelType.FLOAT32;
         case Float64Array:
             return PixelType.FLOAT64;
     }
