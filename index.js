@@ -32,16 +32,18 @@ const readFile = (path) => {
 }
 class RGisFile{
 
-    _buffer = Buffer.from(new ArrayBuffer(0))
-    rasterMeta = {};
-    bands = [];
-    _offset = 0;
-    options = {
-        renderer: defaultRenderer,
-        bbox: null
-    }
+
 
     constructor(data, options){
+        this._buffer = Buffer.from(new ArrayBuffer(0))
+        this.rasterMeta = {};
+        this.bands = [];
+        this._offset = 0;
+        this.options = {
+            renderer: defaultRenderer,
+            bbox: null
+        }
+
         if (data){
             if(options){
                 this.options.renderer = options.renderer || defaultRenderer;
@@ -51,25 +53,25 @@ class RGisFile{
         }
     }
 
-    init = (buffer) => {
+    init(buffer){
         this._buffer = buffer;
         this.readRasterMeta();
         this.readBand();
         delete this._buffer;
     }
 
-    saveToFile = async (path) => {
+    async saveToFile(path){
         const buf = zlib.deflateSync(this.toBuffer());
         await fs.writeFileSync(path, buf)
     }
 
-    saveAsPng = async (path) => {
+    async saveAsPng(path){
         const d = this.toDataUrl();
         let base64Data = d.replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
     }
 
-    bufferToCanvas = (imgBuf) => {
+    bufferToCanvas(imgBuf){
         const canvas = createCanvas(this.rasterMeta['nx'], this.rasterMeta['ny'])
         const ctx = canvas.getContext('2d');
         const imageData = ctx.createImageData(this.rasterMeta['nx'], this.rasterMeta['ny']);
@@ -78,16 +80,16 @@ class RGisFile{
         return canvas;
     }
 
-    bufferToCanvasDataUrl = (imgBuf) => {
+    bufferToCanvasDataUrl(imgBuf){
         const canvas = this.bufferToCanvas(imgBuf);
         return canvas.toDataURL();
     }
 
-    setRenderer = (renderer) => {
+    setRenderer(renderer){
         this.bands.forEach(band=>band.renderer=renderer);
     }
 
-    toBuffer = () => {
+    toBuffer(){
         let buffer = getRasterInitBuffer({
             vt: this.rasterMeta['vt'].type,
             nb: this.rasterMeta['nb'],
@@ -107,11 +109,11 @@ class RGisFile{
         return buffer;
     }
 
-    setUncompressedData = (data) => {
+    setUncompressedData(data){
         this.init(data);
     }
 
-    toDataUrl = () => {
+    toDataUrl(){
         const arr = [];
         let bufLength = 0;
         for (let i = 0; i < this.bands.length; i++) {
@@ -123,7 +125,7 @@ class RGisFile{
         return this.bufferToCanvasDataUrl(imgBuf);
     }
 
-    getTileImage = (x, y, z) => {
+    getTileImage(x, y, z){
         const arr = [];
         let bufLength = 0;
         for (let i = 0; i < this.bands.length; i++) {
@@ -139,14 +141,14 @@ class RGisFile{
         return canvas;
     }
 
-    saveTileAsPng = async (x, y, z, path) => {
+    async saveTileAsPng (x, y, z, path){
         const canvas = this.getTileImage(x, y, z);
         const dataUrl = canvas.toDataURL();
         let base64Data = dataUrl.replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
     }
 
-    generateTiles = async (z1, z2, dirPath) => {
+    async generateTiles(z1, z2, dirPath){
         const latLngToTile = (lng, lat, zoom) => {
             let x = (Math.floor((lng+180)/360*Math.pow(2,zoom)));
             let y = (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)));
@@ -174,7 +176,7 @@ class RGisFile{
         }
     }
 
-    mergeBandImgBuffers = (bufLength, arr) => {
+    mergeBandImgBuffers(bufLength, arr){
         const imgBuf = new Uint8ClampedArray(bufLength);
         for (let i = 0; i < bufLength; i++) {
             let t = 0;
@@ -186,11 +188,11 @@ class RGisFile{
         return arr[0]
     }
 
-    toCompressedBuffer = () => {
+    toCompressedBuffer(){
         return zlib.deflateSync(this.toBuffer());
     }
 
-    getRegion = (fx1, fy1, fx2, fy2) => {
+    getRegion(fx1, fy1, fx2, fy2){
         const nb = this.bands.length;
         const xRes = this.rasterMeta['xres'],
             yRes = this.rasterMeta['yres'],
@@ -225,38 +227,38 @@ class RGisFile{
      * Read init data
      */
 
-    static fromUncompressedBuffer =  (buffer, options) => {
+    static fromUncompressedBuffer(buffer, options){
         const rgf = new RGisFile(null);
         rgf.setUncompressedData(buffer);
         return rgf;
     }
-    static fromGeoTiffFile = async (path, options) => {
+    static async  fromGeoTiffFileasync (path, options){
         const data = readFile(path);
         return await this.geoTiffBufferToRgf(data, options);
     }
 
-    static fromGeoTiffBuffer = async (buffer, options) => {
+    static async fromGeoTiffBuffer(buffer, options){
         return await this.geoTiffBufferToRgf(buffer, options);
     }
 
-    static fromGeoTiffUrl = async (url, options) => {
+    static async fromGeoTiffUrl(url, options){
         const response = await fetch(url);
         const buffer = await response.buffer();
         return await this.geoTiffBufferToRgf(buffer, options);
     }
 
-    static fromFile = async (url) => {
+    static async fromFile(url) {
         const data = readFile(url);
         return new RGisFile(data);
     }
 
-    static fromUrl = async (url) => {
+    static async fromUrl(url) {
         const response = await fetch(url);
         const data = await response.buffer();
         return new RGisFile(data);
     }
 
-    static geoTiffBufferToRgf = async (data, options) => {
+    static async geoTiffBufferToRgf (data, options) {
         const rgf = new RGisFile(null);
         if(options){
             rgf.options.renderer = options.renderer || defaultRenderer;
@@ -317,7 +319,7 @@ class RGisFile{
      * Core functions
      */
 
-    readRasterMeta = () => {
+    readRasterMeta() {
         this.rasterMeta['vt'] = this.getPixelType(this._buffer.readInt8(0));
         this.rasterMeta['nb'] = this._buffer.readInt8(1);
         this.rasterMeta['crs'] = this._buffer.readInt16BE(2);
@@ -340,7 +342,7 @@ class RGisFile{
         this._offset = 256;
     }
 
-    readBand = () => {
+    readBand() {
         const tempOffset = this._offset;
         this.bands = [];
         for (let i = 0; i < this.rasterMeta['nb']; i++) {
@@ -356,7 +358,7 @@ class RGisFile{
      * Accessors
      */
 
-    getPixelType = (v) => {
+    getPixelType (v)  {
         return Object.keys(PixelType).map(key=>{
             const t = PixelType[key];
             if (t['type']===v){
@@ -367,43 +369,43 @@ class RGisFile{
         }).filter(e=>e!==null)[0]||null;
     }
 
-    getBounds = () => {
+    getBounds  ()  {
         return [this.rasterMeta['x1'], this.rasterMeta['y1'], this.rasterMeta['x2'], this.rasterMeta['y2']];
     }
 
-    getNoOfBands = () => {
+    getNoOfBands  ()  {
         return this.rasterMeta['nb'];
     }
 
-    getValueType = () => {
+    getValueType  ()  {
         return this.rasterMeta['vt']
     }
 
-    getCoordinateSystem = () => {
+    getCoordinateSystem  ()  {
         return this.rasterMeta['crs'];
     }
 
-    getXResolution = () => {
+    getXResolution  ()  {
         return this.rasterMeta['xres'];
     }
 
-    getYResolution = () => {
+    getYResolution  ()  {
         return this.rasterMeta['yres'];
     }
 
-    getWidth = () => {
+    getWidth  ()  {
         return this.rasterMeta['nx'];
     }
 
-    getHeight = () => {
+    getHeight  ()  {
         return this.rasterMeta['ny'];
     }
 
-    getBands = () => {
+    getBands ()  {
         return this.bands
     }
 
-    getBboxMeta = (fx1, fy1, fx2, fy2) => {
+    getBboxMeta  (fx1, fy1, fx2, fy2)  {
         const nb = this.rasterMeta['nb'];
         const xRes = this.rasterMeta['xres'],
             yRes = this.rasterMeta['yres'],
@@ -443,6 +445,15 @@ class RGisFile{
             ny: fny
         };
     }
+    getBbox () {
+        const
+            x1 = this.rasterMeta['x1'],
+            y1 = this.rasterMeta['y1'],
+            x2 = this.rasterMeta['x2'],
+            y2 = this.rasterMeta['y2'];
+        return [x1, y1, x2, y2];
+    }
+
 
 }
 

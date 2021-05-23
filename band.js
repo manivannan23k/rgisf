@@ -14,15 +14,18 @@ const {
 } = require('./utils')
 
 class Band{
-    offset = 0
-    dataOffset = 0
-    buffer = Buffer.from(new ArrayBuffer(0))
-    rasterMeta = null
-    canvas = createCanvas(1, 1)
-    regionFilter = null
-    data = []
 
     constructor(buffer, offset, rasterMeta, regionFilter){
+
+        this.offset = 0
+        this.dataOffset = 0
+        this.buffer = Buffer.from(new ArrayBuffer(0))
+        this.rasterMeta = null
+        this.canvas = createCanvas(1, 1)
+        this.regionFilter = null
+        this.data = []
+
+
         this.offset = offset;
         this.buffer = buffer;
         this.regionFilter = regionFilter;
@@ -33,13 +36,13 @@ class Band{
         delete this.buffer;
     }
 
-    readBandMetaData = () => {
+    readBandMetaData ()  {
         const typ = this.rasterMeta['vt'];
         this.metaData = {min: this.readValueOfType(typ.type, this.offset).value, max: this.readValueOfType(typ.type, this.offset+typ.size).value};
         this.offset += 256;
     }
 
-    readBandRenderer = () => {
+    readBandRenderer  ()  {
         let offset = this.offset;
         const type = this.buffer.readInt8(offset);
         let renderer = null;
@@ -91,7 +94,7 @@ class Band{
         this.dataOffset = this.offset
     }
 
-    readBandData = () => {
+    readBandData  ()  {
         const typ = this.rasterMeta['vt'].type;
         const size = this.rasterMeta['vt'].size;
         // console.log(this.offset, size, this.buffer.readFloatBE(this.offset+(4*4500)))
@@ -131,7 +134,7 @@ class Band{
         }
     }
 
-    readValueOfType = (typ, offset) => {
+    readValueOfType  (typ, offset)  {
         let value;
         switch(typ){
             case PixelType.FLOAT32.type:
@@ -170,7 +173,7 @@ class Band{
         return {value, offset}
     }
 
-    toUint8ClampedArray = () => {
+    toUint8ClampedArray  ()  {
         const imgBuf = new Uint8ClampedArray(this.rasterMeta['nx'] * this.rasterMeta['ny'] * 4);
         for (let y = 0; y < this.rasterMeta['ny']; y++) {
             const row = this.data[y];
@@ -183,12 +186,12 @@ class Band{
         return imgBuf
     }
 
-    toDataUrl = () => {
+    toDataUrl  () {
         const imgBuf = this.toUint8ClampedArray()
         return this.bufferToCanvasDataUrl(imgBuf);
     }
 
-    getRatioColor = (startColor, endColor, ratio) => {
+    getRatioColor  (startColor, endColor, ratio)  {
         const w = ratio * 2 - 1;
         const w1 = (w + 1) / 2;
         const w2 = 1 - w1;
@@ -198,14 +201,14 @@ class Band{
             Math.round((startColor[3] * w1 + endColor[3] * w2))/255];
     }
 
-    setImgBufPixel = (imgBuf, rgbaVal, imgBufPos) => {
+    setImgBufPixel  (imgBuf, rgbaVal, imgBufPos)  {
         imgBuf[imgBufPos] = rgbaVal[0];
         imgBuf[imgBufPos+1] = rgbaVal[1];
         imgBuf[imgBufPos+2] = rgbaVal[2];
         imgBuf[imgBufPos+3] = Math.floor(rgbaVal[3]*255);
     }
 
-    bufferToCanvasDataUrl = (imgBuf) => {
+    bufferToCanvasDataUrl  (imgBuf)  {
         this.canvas = createCanvas(this.rasterMeta['nx'], this.rasterMeta['ny'])
         const ctx = this.canvas.getContext('2d');
         const imageData = ctx.createImageData(this.rasterMeta['nx'], this.rasterMeta['ny']);
@@ -214,12 +217,12 @@ class Band{
         return this.canvas.toDataURL();
     }
 
-    save = (path) => {
+    save  (path)  {
         this.toDataUrl()
         fs.writeFileSync(path, this.canvas.toBuffer('image/png'))
     }
 
-    getTileImage = (x, y, z) => {
+    getTileImage  (x, y, z)  {
         const tileToLatLngBbox = (x, y, z) => {
             const lng1 = (x/Math.pow(2,z)*360-180);
             const lng2 = ((x+1)/Math.pow(2,z)*360-180);
@@ -270,13 +273,13 @@ class Band{
         return canvas;
     }
 
-    saveTileAsPng = async (x, y, z, path) => {
+    async saveTileAsPng  (x, y, z, path)  {
         const canvas = this.getTileImage(x, y, z);
         let base64Data = canvas.toDataURL().replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
     }
 
-    generateTiles = async (z1, z2, dirPath) => {
+    async generateTiles  (z1, z2, dirPath)  {
         const latLngToTile = (lng, lat, zoom) => {
             let x = (Math.floor((lng+180)/360*Math.pow(2,zoom)));
             let y = (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)));
@@ -304,7 +307,7 @@ class Band{
         }
     }
 
-    getRgbaForValue = (value) => {
+    getRgbaForValue (value)  {
         let rgbaVal = [0,0,0,0];
         switch (this.renderer.type) {
             case 1:
@@ -332,16 +335,16 @@ class Band{
         return rgbaVal;
     }
 
-    saveAsDataUrl = async (path) => {
+    async saveAsDataUrl (path)  {
         await fs.writeFileSync(path, this.toDataUrl());
     }
 
-    saveAsPng = async (path) => {
+    async saveAsPng  (path)  {
         let base64Data = this.toDataUrl().replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
     }
 
-    toBuffer = () => {
+    toBuffer ()  {
         let buffer = Buffer.from('');
         let min = null, max = null, nx = this.rasterMeta['nx'], ny = this.rasterMeta['ny'], vt = this.rasterMeta['vt'];
         const imgBuffer = Buffer.alloc(nx * ny * vt.size);
@@ -365,7 +368,7 @@ class Band{
     }
 
 
-    getRegion = (fx1, fy1, fx2, fy2) => {
+    getRegion  (fx1, fy1, fx2, fy2)  {
         const xRes = this.rasterMeta['xres'],
             yRes = this.rasterMeta['yres'],
             x1 = this.rasterMeta['x1'],
