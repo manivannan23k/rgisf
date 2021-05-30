@@ -6,7 +6,6 @@ const fetch = require('node-fetch');
 const GeoTIFF = require('geotiff');
 const PixelType = require('./types')
 const Renderer = require('./renderer')
-const { createCanvas } = require('canvas')
 
 const {
     getRasterInitBuffer,
@@ -15,7 +14,8 @@ const {
     getPixelTypeFromObj,
     writeBandValueToBuffer,
     writeClassesToBuffer,
-    writeColorRampToBuffer
+    writeColorRampToBuffer,
+    getTypeObjFromType
 } = require('./utils')
 
 const defaultRenderer = {
@@ -32,13 +32,12 @@ const readFile = (path) => {
 }
 class RGisFile{
 
-
-
     constructor(data, options){
         this._buffer = Buffer.from(new ArrayBuffer(0))
         this.rasterMeta = {};
         this.bands = [];
         this._offset = 0;
+        this.factor = null;
         this.options = {
             renderer: defaultRenderer,
             bbox: null
@@ -48,6 +47,7 @@ class RGisFile{
             if(options){
                 this.options.renderer = options.renderer || defaultRenderer;
                 this.options.bbox = options.bbox;
+                this.factor = options.factor;
             }
             this.init(zlib.unzipSync(data));
         }
@@ -61,7 +61,7 @@ class RGisFile{
     }
 
     async saveToFile(path){
-        const buf = zlib.deflateSync(this.toBuffer());
+        const buf = this.toCompressedBuffer();
         await fs.writeFileSync(path, buf)
     }
 
@@ -72,7 +72,8 @@ class RGisFile{
     }
 
     bufferToCanvas(imgBuf){
-        const canvas = createCanvas(this.rasterMeta['nx'], this.rasterMeta['ny'])
+
+        const canvas = require('./create-canvas')(this.rasterMeta['nx'], this.rasterMeta['ny'])
         const ctx = canvas.getContext('2d');
         const imageData = ctx.createImageData(this.rasterMeta['nx'], this.rasterMeta['ny']);
         imageData.data.set(imgBuf);
@@ -101,7 +102,8 @@ class RGisFile{
             xRes: this.rasterMeta['xres'],
             yRes: this.rasterMeta['yres'],
             nx: this.rasterMeta['nx'],
-            ny: this.rasterMeta['ny']
+            ny: this.rasterMeta['ny'],
+            factor: this.rasterMeta['factor']
         });
         for (let i = 0; i < this.bands.length; i++) {
             buffer = Buffer.concat([buffer, this.bands[i].toBuffer()]);
@@ -135,7 +137,7 @@ class RGisFile{
             arr.push(bandData);
         }
         const imgBuf = this.mergeBandImgBuffers(bufLength, arr);
-        const canvas = createCanvas(256, 256)
+        const canvas = require('./create-canvas')(256, 256)
         const ctx = canvas.getContext('2d');
         ctx.putImageData(imgBuf, 0, 0);
         return canvas;
@@ -210,7 +212,7 @@ class RGisFile{
             fny = Math.abs(dataYIndex1-dataYIndex2);
 
         let buffer = getRasterInitBuffer({
-            vt: fvt.type, nb, crs: 4326, x1: fx1, y1: fy1, x2: fx2, y2: fy2, xRes: fxRes, yRes: fyRes, nx: fnx, ny: fny
+            vt: fvt.type, nb, crs: 4326, x1: fx1, y1: fy1, x2: fx2, y2: fy2, xRes: fxRes, yRes: fyRes, nx: fnx, ny: fny, factor: this.rasterMeta['factor']
         });
 
         for (let bandNo = 0; bandNo < this.bands.length; bandNo++) {
@@ -247,9 +249,9 @@ class RGisFile{
         return await this.geoTiffBufferToRgf(buffer, options);
     }
 
-    static async fromFile(url) {
+    static async fromFile(url, options) {
         const data = readFile(url);
-        return new RGisFile(data);
+        return new RGisFile(data, options);
     }
 
     static async fromUrl(url) {
@@ -262,6 +264,7 @@ class RGisFile{
         const rgf = new RGisFile(null);
         if(options){
             rgf.options.renderer = options.renderer || defaultRenderer;
+            rgf.options.readAs = options.readAs;
         }
         const tiff = await GeoTIFF.fromArrayBuffer(bufferToArrayBuffer(data));
         const image = await tiff.getImage();
@@ -272,9 +275,16 @@ class RGisFile{
         if (nb===0){
             return
         }
-        const bbox = image.getBoundingBox(), bytesPerPixel = bands[0].BYTES_PER_ELEMENT;
-        const vt = getPixelTypeFromObj(bands[0]),
-            x1 = bbox[0],
+        const bbox = image.getBoundingBox();
+        let bytesPerPixel = bands[0].BYTES_PER_ELEMENT;
+        let vt = getPixelTypeFromObj(bands[0]);
+        let factor = 1;
+        if (rgf.options.readAs){
+            vt = getTypeObjFromType(rgf.options.readAs.type);
+            bytesPerPixel = vt.size;
+            factor = rgf.options.readAs.factor
+        }
+        const x1 = bbox[0],
             y1 = bbox[3],
             x2 = bbox[2],
             y2 = bbox[1],
@@ -284,7 +294,7 @@ class RGisFile{
             ny = image.getHeight();
 
         let buffer = getRasterInitBuffer({
-            vt: vt.type, nb, crs: 4326, x1, y1, x2, y2, xRes, yRes, nx, ny
+            vt: vt.type, nb, crs: 4326, x1, y1, x2, y2, xRes, yRes, nx, ny, factor: factor
         })
 
         for (let bandNo = 0; bandNo < bands.length; bandNo++) {
@@ -295,7 +305,7 @@ class RGisFile{
             const imgBuffer = Buffer.alloc(nx*ny*vt.size);
             for (let y = 0; y < ny; y++) {
                 for (let x = 0; x < nx; x++) {
-                    const v = band[(y*bands.width)+x];
+                    const v = band[(y*bands.width)+x] * factor;
                     if (min===null || min > v)
                         min = v;
                     if (max===null || max < v)
@@ -331,6 +341,7 @@ class RGisFile{
         this.rasterMeta['yres'] = this._buffer.readFloatBE(24);
         this.rasterMeta['nx'] = this._buffer.readFloatBE(28);
         this.rasterMeta['ny'] = this._buffer.readFloatBE(32);
+        this.rasterMeta['factor'] = this._buffer.readFloatBE(36);
         if (this.options.bbox){
             this.rasterMeta = this.getBboxMeta(
                 this.options.bbox[0],
@@ -338,6 +349,10 @@ class RGisFile{
                 this.options.bbox[2],
                 this.options.bbox[3]
             )
+        }
+        this.rasterMeta['factor'] = this._buffer.readFloatBE(36);
+        if (this.factor){
+            this.rasterMeta['factor'] = this.factor
         }
         this._offset = 256;
     }

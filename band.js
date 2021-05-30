@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path')
-const { createCanvas } = require('canvas')
 const PixelType = require('./types')
 const Renderer = require('./renderer')
 const {
@@ -21,7 +20,7 @@ class Band{
         this.dataOffset = 0
         this.buffer = Buffer.from(new ArrayBuffer(0))
         this.rasterMeta = null
-        this.canvas = createCanvas(1, 1)
+        this.canvas = require('./create-canvas')(1, 1)
         this.regionFilter = null
         this.data = []
 
@@ -170,7 +169,7 @@ class Band{
                 offset += PixelType.UINT32.size;
                 break;
         }
-        return {value, offset}
+        return {value: value/this.rasterMeta['factor'], offset}
     }
 
     toUint8ClampedArray  ()  {
@@ -184,6 +183,10 @@ class Band{
             }
         }
         return imgBuf
+    }
+
+    getValueAt(x, y){
+        return this.data[x][y];
     }
 
     toDataUrl  () {
@@ -209,7 +212,7 @@ class Band{
     }
 
     bufferToCanvasDataUrl  (imgBuf)  {
-        this.canvas = createCanvas(this.rasterMeta['nx'], this.rasterMeta['ny'])
+        this.canvas = require('./create-canvas')(this.rasterMeta['nx'], this.rasterMeta['ny'])
         const ctx = this.canvas.getContext('2d');
         const imageData = ctx.createImageData(this.rasterMeta['nx'], this.rasterMeta['ny']);
         imageData.data.set(imgBuf);
@@ -247,7 +250,7 @@ class Band{
             width = this.rasterMeta['nx'],
             height = this.rasterMeta['ny'];
 
-        const canvas = createCanvas(256, 256);
+        const canvas = require('./create-canvas')(256, 256);
         const ctx = canvas.getContext('2d');
 
         const tileBbox = tileToLatLngBbox(x, y, z);
@@ -350,7 +353,7 @@ class Band{
         const imgBuffer = Buffer.alloc(nx * ny * vt.size);
         for (let y = 0; y < ny; y++) {
             for (let x = 0; x < nx; x++) {
-                const v = this.data[y][x];
+                const v = this.data[y][x] * this.rasterMeta['factor'];
                 if (min===null || min > v)
                     min = v;
                 if (max===null || max < v)
@@ -388,7 +391,7 @@ class Band{
         const imgBuffer = Buffer.alloc(fnx*fny*fvt.size);
         for (let y = dataYIndex1; y < dataYIndex2; y++) {
             for (let x = dataXIndex1; x < dataXIndex2; x++) {
-                const v = this.data[y][x];
+                const v = this.data[y][x] * this.rasterMeta['factor'];
                 if (min===null || min > v)
                     min = v;
                 if (max===null || max < v)

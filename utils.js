@@ -58,7 +58,28 @@ const writeBandValueToBuffer = (vt, value, buffer, offset) => {
     }
     return buffer;
 }
-const getRasterInitBuffer = ({vt, nb, crs, x1, y1, x2, y2, xRes, yRes, nx, ny}) => {
+const getTypeObjFromType = (type) => {
+    switch (type) {
+        case PixelType.INT8.type:
+            return PixelType.INT8;
+        case PixelType.INT16.type:
+            return PixelType.INT16;
+        case PixelType.INT32.type:
+            return PixelType.INT32;
+        case PixelType.UINT8.type:
+            return PixelType.UINT8;
+        case PixelType.UINT16.type:
+            return PixelType.UINT16;
+        case PixelType.UINT32.type:
+            return PixelType.UINT32;
+        case PixelType.FLOAT32.type:
+            return PixelType.FLOAT32;
+        case PixelType.FLOAT64.type:
+            return PixelType.FLOAT64;
+    }
+    return PixelType.FLOAT32;
+}
+const getRasterInitBuffer = ({vt, nb, crs, x1, y1, x2, y2, xRes, yRes, nx, ny, factor}) => {
     let buffer = Buffer.alloc(256);
     buffer.writeUInt8(vt, 0);
     buffer.writeUInt8(nb, 1);
@@ -71,6 +92,7 @@ const getRasterInitBuffer = ({vt, nb, crs, x1, y1, x2, y2, xRes, yRes, nx, ny}) 
     buffer.writeFloatBE(yRes, 24);
     buffer.writeFloatBE(nx, 28);
     buffer.writeFloatBE(ny, 32);
+    buffer.writeFloatBE(factor, 36);
     return buffer
 }
 const writeColorRampToBuffer = (buffer, colorRamp, startsAt) => {
@@ -124,5 +146,6 @@ module.exports = {
     getPixelTypeFromObj,
     writeBandValueToBuffer,
     writeClassesToBuffer,
-    writeColorRampToBuffer
+    writeColorRampToBuffer,
+    getTypeObjFromType
 }
