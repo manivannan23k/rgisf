@@ -43,12 +43,12 @@ class RGisFile{
             bbox: null
         }
 
+        if(options){
+            this.options.renderer = options.renderer || defaultRenderer;
+            this.options.bbox = options.bbox;
+            this.factor = options.factor;
+        }
         if (data){
-            if(options){
-                this.options.renderer = options.renderer || defaultRenderer;
-                this.options.bbox = options.bbox;
-                this.factor = options.factor;
-            }
             this.init(zlib.unzipSync(data));
         }
     }
@@ -62,6 +62,11 @@ class RGisFile{
 
     async saveToFile(path){
         const buf = this.toCompressedBuffer();
+        await fs.writeFileSync(path, buf)
+    }
+
+    async saveToFileUnCompressed(path){
+        const buf = this.toBuffer();
         await fs.writeFileSync(path, buf)
     }
 
@@ -230,7 +235,7 @@ class RGisFile{
      */
 
     static fromUncompressedBuffer(buffer, options){
-        const rgf = new RGisFile(null);
+        const rgf = new RGisFile(null, options);
         rgf.setUncompressedData(buffer);
         return rgf;
     }
@@ -254,6 +259,11 @@ class RGisFile{
         return new RGisFile(data, options);
     }
 
+    static fromUncompressedFile(url, options) {
+        const data = readFile(url);
+        return RGisFile.fromUncompressedBuffer(data, options);
+    }
+
     static async fromUrl(url) {
         const response = await fetch(url);
         const data = await response.buffer();
@@ -262,28 +272,16 @@ class RGisFile{
 
     static async geoTiffBufferToRgf (data, options) {
         const rgf = new RGisFile(null);
+        let filterBox = null;
         if(options){
             rgf.options.renderer = options.renderer || defaultRenderer;
             rgf.options.readAs = options.readAs;
+            filterBox = options.bbox;
         }
         const tiff = await GeoTIFF.fromArrayBuffer(bufferToArrayBuffer(data));
         const image = await tiff.getImage();
-        let bands = await image.readRasters();
-
-        const nb = bands.length;
-
-        if (nb===0){
-            return
-        }
+        const rasterOptions = {};
         const bbox = image.getBoundingBox();
-        let bytesPerPixel = bands[0].BYTES_PER_ELEMENT;
-        let vt = getPixelTypeFromObj(bands[0]);
-        let factor = 1;
-        if (rgf.options.readAs){
-            vt = getTypeObjFromType(rgf.options.readAs.type);
-            bytesPerPixel = vt.size;
-            factor = rgf.options.readAs.factor
-        }
         const x1 = bbox[0],
             y1 = bbox[3],
             x2 = bbox[2],
@@ -292,6 +290,30 @@ class RGisFile{
             yRes = image.getResolution()[1],
             nx = image.getWidth(),
             ny = image.getHeight();
+        if (filterBox){
+            rasterOptions['window'] = [
+                Math.round((filterBox[0]-x1)/xRes),
+                Math.round((filterBox[1]-y1)/yRes),
+                Math.round((filterBox[2]-x1)/xRes),
+                Math.round((filterBox[3]-y1)/yRes),
+            ];
+        }
+
+        let bands = await image.readRasters(rasterOptions);
+
+        const nb = bands.length;
+
+        if (nb===0){
+            return
+        }
+        let bytesPerPixel = bands[0].BYTES_PER_ELEMENT;
+        let vt = getPixelTypeFromObj(bands[0]);
+        let factor = 1;
+        if (rgf.options.readAs){
+            vt = getTypeObjFromType(rgf.options.readAs.type);
+            bytesPerPixel = vt.size;
+            factor = rgf.options.readAs.factor
+        }
 
         let buffer = getRasterInitBuffer({
             vt: vt.type, nb, crs: 4326, x1, y1, x2, y2, xRes, yRes, nx, ny, factor: factor
@@ -361,7 +383,7 @@ class RGisFile{
         const tempOffset = this._offset;
         this.bands = [];
         for (let i = 0; i < this.rasterMeta['nb']; i++) {
-            let band = new Band(this._buffer, this._offset, this.rasterMeta, this.regionFilter);
+            let band = new Band(this._buffer, this._offset, this.rasterMeta, this.regionFilter, this.options.renderer);
             this.bands.push(band);
             this._offset = band.offset;
         }

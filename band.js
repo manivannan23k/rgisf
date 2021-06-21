@@ -14,13 +14,14 @@ const {
 
 class Band{
 
-    constructor(buffer, offset, rasterMeta, regionFilter){
+    constructor(buffer, offset, rasterMeta, regionFilter, renderer){
 
         this.offset = 0
+        this.renderer = renderer
         this.dataOffset = 0
         this.buffer = Buffer.from(new ArrayBuffer(0))
         this.rasterMeta = null
-        this.canvas = require('./create-canvas')(1, 1)
+        this.canvas = null
         this.regionFilter = null
         this.data = []
 
@@ -89,7 +90,8 @@ class Band{
                 break;
         }
         this.offset = offset;
-        this.renderer = renderer;
+        if (!this.renderer)
+            this.renderer = renderer;
         this.dataOffset = this.offset
     }
 
