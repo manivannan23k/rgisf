@@ -1,20 +1,9 @@
-const {
-    fromGeoTiffBuffer,
-    fromGeoTiffFileAsync,
-    fromUncompressedBuffer,
-    fromFile,
-    fromUrl,
-    fromUncompressedFile,
-    combineBands,
-    fromGeoTiffUrl,
-    geoTiffBufferToRgf
-} = require("./object-builders");
-
 const Band = require('./band');
+const RasterMetadata = require('./raster-metadata');
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const {defaultRenderer} = require('./constants')
+const {defaultRenderer, defaultCrs} = require('./constants')
 
 const {
     getRasterInitBuffer,
@@ -27,9 +16,9 @@ class RGisFile{
 
     constructor(data, options){
         this._buffer = Buffer.from(new ArrayBuffer(0))
-        this.rasterMeta = {};
+        this.rasterMeta = new RasterMetadata();
         this.bands = [];
-        this._offset = 0;
+        this.offset = 0;
         this.factor = null;
         this.options = {
             renderer: defaultRenderer,
@@ -86,21 +75,21 @@ class RGisFile{
         if (this.factor){
             this.rasterMeta['factor'] = this.factor
         }
-        this._offset = 256;
+        this.offset = 256;
     }
 
     #readBand() {
-        const tempOffset = this._offset;
+        const tempOffset = this.offset;
         this.bands = [];
         for (let i = 0; i < this.rasterMeta['nb']; i++) {
             let attr = {};
             if (this.options.attrs.length>i)
                 attr = this.options.attrs[i];
-            let band = new Band(this._buffer, this._offset, this.rasterMeta, this.regionFilter, this.options.renderer, attr);
+            let band = new Band(this._buffer, this.offset, this.rasterMeta, this.regionFilter, this.options.renderer, attr);
             this.bands.push(band);
-            this._offset = band.offset;
+            this.offset = band.offset;
         }
-        this._offset = tempOffset;
+        this.offset = tempOffset;
     }
 
     /***
@@ -112,11 +101,13 @@ class RGisFile{
         await fs.writeFileSync(path, buf)
     }
 
-    async saveToFileUnCompressed(path){
+    //noinspection JSUnusedGlobalSymbols
+    async saveToUFile(path){
         const buf = this.toBuffer();
         await fs.writeFileSync(path, buf)
     }
 
+    //noinspection JSUnusedGlobalSymbols
     async saveAsPng(path){
         const d = this.toDataUrl();
         let base64Data = d.replace(/^data:image\/png;base64,/, "");
@@ -181,6 +172,7 @@ class RGisFile{
         return canvas;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     async generateTiles(z1, z2, dirPath){
         const latLngToTile = (lng, lat, zoom) => {
             let x = (Math.floor((lng+180)/360*Math.pow(2,zoom)));
@@ -213,6 +205,7 @@ class RGisFile{
         return this.rasterMeta;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getRegion(fx1, fy1, fx2, fy2){
         const nb = this.bands.length;
         const xRes = this.rasterMeta['xres'],
@@ -231,7 +224,7 @@ class RGisFile{
             fny = Math.abs(dataYIndex1-dataYIndex2);
 
         let buffer = getRasterInitBuffer({
-            vt: fvt.type, nb, crs: 4326, x1: fx1, y1: fy1, x2: fx2, y2: fy2, xRes: fxRes, yRes: fyRes, nx: fnx, ny: fny, factor: this.rasterMeta['factor']
+            vt: fvt.type, nb, crs: defaultCrs, x1: fx1, y1: fy1, x2: fx2, y2: fy2, xRes: fxRes, yRes: fyRes, nx: fnx, ny: fny, factor: this.rasterMeta['factor']
         });
 
         for (let bandNo = 0; bandNo < this.bands.length; bandNo++) {
@@ -242,42 +235,52 @@ class RGisFile{
         return RGisFile.fromUncompressedBuffer(buffer);
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getBounds  ()  {
         return [this.rasterMeta['x1'], this.rasterMeta['y1'], this.rasterMeta['x2'], this.rasterMeta['y2']];
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getNoOfBands  ()  {
         return this.rasterMeta['nb'];
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getValueType  ()  {
         return this.rasterMeta['vt']
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getCoordinateSystem  ()  {
         return this.rasterMeta['crs'];
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getXResolution  ()  {
         return this.rasterMeta['xres'];
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getYResolution  ()  {
         return this.rasterMeta['yres'];
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getWidth  ()  {
         return this.rasterMeta['nx'];
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getHeight  ()  {
         return this.rasterMeta['ny'];
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getBands ()  {
         return this.bands
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getBbox () {
         const
             x1 = this.rasterMeta['x1'],
@@ -295,6 +298,7 @@ class RGisFile{
         this.#init(data);
     }
 
+    //noinspection JSUnusedGlobalSymbols
     setRenderer(renderer){
         this.bands.forEach(band=>band.renderer=renderer);
     }
@@ -336,7 +340,7 @@ class RGisFile{
         return {
             vt: fvt,
             nb,
-            crs: 4326,
+            crs: defaultCrs,
             x1: fx1,
             y1: fy1,
             x2: fx2,
@@ -347,29 +351,6 @@ class RGisFile{
             ny: fny
         };
     }
-
-
-    /***
-     * Static object builders
-     */
-
-    static fromUncompressedBuffer = fromUncompressedBuffer
-
-    static fromGeoTiffFileAsync = fromGeoTiffFileAsync
-
-    static fromGeoTiffBuffer = fromGeoTiffBuffer
-
-    static combineBands = combineBands
-
-    static fromGeoTiffUrl = fromGeoTiffUrl
-
-    static fromFile = fromFile
-
-    static fromUncompressedFile = fromUncompressedFile
-
-    static fromUrl = fromUrl
-
-    static geoTiffBufferToRgf = geoTiffBufferToRgf
 
 
 }

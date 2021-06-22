@@ -1,8 +1,8 @@
 {
   "name": "rgisf",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Raster GIS file format",
-  "main": "index.js",
+  "main": "rgisf.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,6 +22,6 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "redis": "^3.1.2"
+
   }
 }

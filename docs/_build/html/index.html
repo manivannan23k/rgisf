@@ -1,111 +1,511 @@
 
+
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>rgisf’s documentation! &mdash; rgisf  documentation</title>
+  
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to rgisf’s documentation! &#8212; rgisf  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="#" class="icon icon-home"> rgisf
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="welcome-to-rgisf-s-documentation">
-<h1>Welcome to rgisf’s documentation!<a class="headerlink" href="#welcome-to-rgisf-s-documentation" title="Permalink to this headline">¶</a></h1>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">rgisf’s documentation!</a><ul>
+<li><a class="reference internal" href="#api-docs">Api Docs</a><ul>
+<li><a class="reference internal" href="#class-rgisfile">Class: RGisFile</a><ul>
+<li><a class="reference internal" href="#instance-builders">Instance builders</a><ul>
+<li><a class="reference internal" href="#static-rgisfile-from-data-options-iscompressed-true">static RGisFile.from(data, [options], [isCompressed=true])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromgeotiff-data-options-iscompressed-true">static RGisFile.fromGeoTiff(data, [options], [isCompressed=true])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-frombuffer-buffer-options">static RGisFile.fromBuffer(buffer, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromubuffer-buffer-options">static RGisFile.fromUBuffer(buffer, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromfile-path-options">static RGisFile.fromFile(path, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromufile-path-options">static RGisFile.fromUFile(path, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromurl-url-options">static RGisFile.fromUrl(url, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromuurl-url-options">static RGisFile.fromUUrl(url, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromgeotiffurl-url-options">static RGisFile.fromGeoTiffUrl(url, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-fromgeotifffile-path-options">static RGisFile.fromGeoTiffFile(path, [options])</a></li>
+<li><a class="reference internal" href="#static-rgisfile-combine-rgfiles-options">static RGisFile.combine(rgFiles, [options])</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saving-data">Saving data</a><ul>
+<li><a class="reference internal" href="#rgisfile-savetofile-filepath">RGisFile.saveToFile(filePath)</a></li>
+<li><a class="reference internal" href="#rgisfile-savetoufile-filepath">RGisFile.saveToUFile(filePath)</a></li>
+<li><a class="reference internal" href="#rgisfile-saveaspng-filepath">RGisFile.saveAsPng(filePath)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#accessors">Accessors</a><ul>
+<li><a class="reference internal" href="#rgisfile-tobuffer">RGisFile.toBuffer()</a></li>
+<li><a class="reference internal" href="#rgisfile-tocompressedbuffer">RGisFile.toCompressedBuffer()</a></li>
+<li><a class="reference internal" href="#rgisfile-todataurl">RGisFile.toDataUrl()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">rgisf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>rgisf’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rgisf-s-documentation">
+<h1>rgisf’s documentation!<a class="headerlink" href="#rgisf-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="api-docs">
+<h2>Api Docs<a class="headerlink" href="#api-docs" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#class-rgisfile">Class RGisFile</a></dt><dd><ul>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#instance-builders">Instance builders</a></dt><dd><ul>
+<li><p><a class="reference internal" href="#static-rgisfile-from-data-options-iscompressed-true">static RGisFile.from(data, [options], [isCompressed=true])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromgeotiff-data-options">static RGisFile.fromGeoTiff(data, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-frombuffer-buffer-options">static RGisFile.fromBuffer(buffer, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromubuffer-buffer-options">static RGisFile.fromUBuffer(buffer, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromfile-path-options">static RGisFile.fromFile(path, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromufile-path-options">static RGisFile.fromUFile(path, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromurl-url-options">static RGisFile.fromUrl(url, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromuurl-url-options">static RGisFile.fromUUrl(url, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromgeotiffurl-url-options">static RGisFile.fromGeoTiffUrl(url, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-fromgeotifffile-path-options">static RGisFile.fromGeoTiffFile(path, [options])</a></p></li>
+<li><p><a class="reference internal" href="#static-rgisfile-combine-rgfiles-options">static RGisFile.combine(rgFiles, [options])</a></p></li>
 </ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#saving-data">Saving data</a></dt><dd><ul>
+<li><p><a class="reference internal" href="#rgisfile-savetofile-filepath">RGisFile.saveToFile(filePath)</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-savetoufile-filepath">RGisFile.saveToUFile(filePath)</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-saveaspng-filepath">RGisFile.saveAsPng(filePath)</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="class-rgisfile">
+<span id="id1"></span><h3>Class: RGisFile<a class="headerlink" href="#class-rgisfile" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="instance-builders">
+<span id="id2"></span><h4>Instance builders<a class="headerlink" href="#instance-builders" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="static-rgisfile-from-data-options-iscompressed-true">
+<span id="id3"></span><h5>static RGisFile.from(data, [options], [isCompressed=true])<a class="headerlink" href="#static-rgisfile-from-data-options-iscompressed-true" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> - Buffer, path or url</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">isCompressed</span></code> - boolean; default: true</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from the rgisf data(buffer, path or url).</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+
+<span class="c1">//from data buffer</span>
+<span class="kr">const</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf1</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">buffer</span><span class="p">);</span>
+
+<span class="c1">//from file path</span>
+<span class="kr">const</span> <span class="nx">rgf2</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;/some/path/to/data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="c1">//from Url</span>
+<span class="kr">const</span> <span class="nx">rgf3</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;https://some.domain.name/data.rgisf&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromgeotiff-data-options-iscompressed-true">
+<span id="static-rgisfile-fromgeotiff-data-options"></span><h5>static RGisFile.fromGeoTiff(data, [options], [isCompressed=true])<a class="headerlink" href="#static-rgisfile-fromgeotiff-data-options-iscompressed-true" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> - Buffer, path or url</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from the GeoTiff data(buffer, path or url).</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+
+<span class="c1">//from data buffer</span>
+<span class="kr">const</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf1</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="nx">buffer</span><span class="p">);</span>
+
+<span class="c1">//from file path</span>
+<span class="kr">const</span> <span class="nx">rgf2</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;/some/path/to/data.tif&#39;</span><span class="p">);</span>
+
+<span class="c1">//from Url</span>
+<span class="kr">const</span> <span class="nx">rgf3</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;https://some.domain.name/data.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-frombuffer-buffer-options">
+<span id="id4"></span><h5>static RGisFile.fromBuffer(buffer, [options])<a class="headerlink" href="#static-rgisfile-frombuffer-buffer-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer</span></code> - RGisFile buffer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from the RGisFile buffer.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromBuffer</span><span class="p">(</span><span class="nx">buffer</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromubuffer-buffer-options">
+<span id="id5"></span><h5>static RGisFile.fromUBuffer(buffer, [options])<a class="headerlink" href="#static-rgisfile-fromubuffer-buffer-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer</span></code> - Uncompressed RGisFile buffer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from the RGisFile data buffer(uncompressed data file).</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromUBuffer</span><span class="p">(</span><span class="nx">buffer</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromfile-path-options">
+<span id="id6"></span><h5>static RGisFile.fromFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromfile-path-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> - RGisFile path</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from the RGisFile file.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromFile</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromufile-path-options">
+<span id="id7"></span><h5>static RGisFile.fromUFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromufile-path-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> - Uncompressed RGisFile path</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from the uncompressed RGisFile file.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromFile</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromurl-url-options">
+<span id="id8"></span><h5>static RGisFile.fromUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromurl-url-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">url</span></code> - RGisFile url</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from RGisFile url.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromUrl</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromuurl-url-options">
+<span id="id9"></span><h5>static RGisFile.fromUUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromuurl-url-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">url</span></code> - Uncompressed RGisFile url</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from uncompressed RGisFile url.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromUUrl</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromgeotiffurl-url-options">
+<span id="id10"></span><h5>static RGisFile.fromGeoTiffUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromgeotiffurl-url-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">url</span></code> - Buffer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from GeoTiff url.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiffUrl</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-fromgeotifffile-path-options">
+<span id="id11"></span><h5>static RGisFile.fromGeoTiffFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromgeotifffile-path-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> - GeoTiff path</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Creates an instance of the class RGisFile from GeoTiff file.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiffFile</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-rgisfile-combine-rgfiles-options">
+<span id="id12"></span><h5>static RGisFile.combine(rgFiles, [options])<a class="headerlink" href="#static-rgisfile-combine-rgfiles-options" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rgFiles</span></code> - Array of RGisFile objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
+</ul>
+<p>Combines bands in multiple RGisFile and returns a single file.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object1</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">object2</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">combinedRgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">combine</span><span class="p">([</span><span class="nx">object1</span><span class="p">,</span> <span class="nx">object2</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="saving-data">
+<span id="id13"></span><h4>Saving data<a class="headerlink" href="#saving-data" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="rgisfile-savetofile-filepath">
+<span id="id14"></span><h5>RGisFile.saveToFile(filePath)<a class="headerlink" href="#rgisfile-savetofile-filepath" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the data</p></li>
+</ul>
+<p>Stores the object in the specified location. By default, the data is compressed while it is stored.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="nx">rgf</span><span class="p">.</span><span class="nx">saveToFile</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-savetoufile-filepath">
+<span id="id15"></span><h5>RGisFile.saveToUFile(filePath)<a class="headerlink" href="#rgisfile-savetoufile-filepath" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the data</p></li>
+</ul>
+<p>Stores the object in the specified location in uncompressed state.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="nx">rgf</span><span class="p">.</span><span class="nx">saveToUFile</span><span class="p">(</span><span class="s1">&#39;data.urgisf&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-saveaspng-filepath">
+<span id="id16"></span><h5>RGisFile.saveAsPng(filePath)<a class="headerlink" href="#rgisfile-saveaspng-filepath" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the rendered png image</p></li>
+</ul>
+<p>Stores the rendered png image in the specified location. The image is rendered based on the passed renderer specified or default renderer will be used.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="nx">rgf</span><span class="p">.</span><span class="nx">saveAsPng</span><span class="p">(</span><span class="s1">&#39;data.png&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="accessors">
+<span id="id17"></span><h4>Accessors<a class="headerlink" href="#accessors" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="rgisfile-tobuffer">
+<span id="id18"></span><h5>RGisFile.toBuffer()<a class="headerlink" href="#rgisfile-tobuffer" title="Permalink to this headline">¶</a></h5>
+<p>Returns the data in uncompressed buffer format.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">toBuffer</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-tocompressedbuffer">
+<span id="id19"></span><h5>RGisFile.toCompressedBuffer()<a class="headerlink" href="#rgisfile-tocompressedbuffer" title="Permalink to this headline">¶</a></h5>
+<p>Returns the data in compressed buffer format.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">toCompressedBuffer</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-todataurl">
+<span id="id20"></span><h5>RGisFile.toDataUrl()<a class="headerlink" href="#rgisfile-todataurl" title="Permalink to this headline">¶</a></h5>
+<p>Returns the data as a rendered png data url (using the specified renderer. If not specified, default renderer will be used).</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">dataUrl</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">toDataUrl</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 
+           </div>
+           
           </div>
-          
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Manivannan K.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">rgisf</a></h1>
 
+    </section>
 
+  </div>
+  
 
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
 
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2021, Manivannan K.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
+  
+  
     
+   
 
-    
-  </body>
+</body>
 </html>

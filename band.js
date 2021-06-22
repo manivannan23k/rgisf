@@ -1,16 +1,9 @@
 const fs = require('fs');
 const path = require('path')
-const PixelType = require('./types')
-const AttrType = require('./attr-types')
-const Renderer = require('./renderer')
+const {PixelType, AttributeType, RendererType} = require('./constants')
 const {
-    getRasterInitBuffer,
     getRendererBuffer,
-    bufferToArrayBuffer,
-    getPixelTypeFromObj,
     writeBandValueToBuffer,
-    writeClassesToBuffer,
-    writeColorRampToBuffer,
     getAttrBuffer
 } = require('./utils')
 
@@ -21,7 +14,6 @@ class Band{
         this.offset = 0
         this.renderer = renderer
         this.attr = attr
-        this.dataOffset = 0
         this.buffer = Buffer.from(new ArrayBuffer(0))
         this.rasterMeta = null
         this.canvas = null
@@ -55,16 +47,14 @@ class Band{
         for (let i = 0; i < attrCount; i++) {
             const fieldSize = this.buffer.readInt16BE(this.offset);
             this.offset += 2;
-            const fieldData = this.readAttrOfType(AttrType.VARCHAR.type, fieldSize, this.offset);
+            const fieldData = this.readAttrOfType(AttributeType.VARCHAR.type, fieldSize, this.offset);
             this.offset += fieldSize;
             const valueType = this.buffer.readInt16BE(this.offset);
             this.offset += 2;
-            console.log(this.offset)
             const valueSize = this.buffer.readInt16BE(this.offset);
             this.offset += 2;
             const valueData = this.readAttrOfType(valueType, valueSize, this.offset);
             this.offset += valueSize;
-            // console.log(fieldData, valueData);
             dataAttr[fieldData] = valueData;
         }
         this.attr = { ...dataAttr, ...this.attr };
@@ -72,11 +62,11 @@ class Band{
 
     readAttrOfType(type, size, offset){
         switch (type) {
-            case AttrType.BOOL.type:
+            case AttributeType.BOOL.type:
                 return this.buffer.readUInt8(offset) !== 0;
-            case AttrType.VARCHAR.type:
+            case AttributeType.VARCHAR.type:
                 return this.buffer.toString('utf8', offset, offset + size);
-            case AttrType.FLOAT32.type:
+            case AttributeType.FLOAT32.type:
                 return this.buffer.readFloatBE(offset);
         }
         return null;
@@ -88,7 +78,7 @@ class Band{
         let renderer = null;
         offset += 1;
         switch(type){
-            case Renderer.STRETCHED:
+            case RendererType.STRETCHED:
                 let colorRampSize = this.buffer.readInt8(offset);
                 const colorRamp = [];
                 offset += 1;
@@ -103,7 +93,7 @@ class Band{
                     }
                 }
                 break;
-            case Renderer.CLASSIFIED:
+            case RendererType.CLASSIFIED:
                 let classSize = this.buffer.readInt8(offset);
                 const classes = [];
                 let t = null;
@@ -132,13 +122,11 @@ class Band{
         this.offset = offset;
         if (!this.renderer)
             this.renderer = renderer;
-        this.dataOffset = this.offset
     }
 
     readBandData  ()  {
         const typ = this.rasterMeta['vt'].type;
         const size = this.rasterMeta['vt'].size;
-        // console.log(this.offset, size, this.buffer.readFloatBE(this.offset+(4*4500)))
         if (!this.regionFilter){
             for (let y = 0; y < this.rasterMeta['ny']; y++) {
                 this.data[y] = [];
@@ -149,13 +137,8 @@ class Band{
                 }
             }
         }else {
-            const x1 = this.rasterMeta['x1'],
-                y1 = this.rasterMeta['y1'];
             const [dataXIndex1, dataYIndex1, dataXIndex2, dataYIndex2] = this.regionFilter.bbox;
             const nx = this.regionFilter.nx;
-            const fnx = Math.abs(dataXIndex1-dataXIndex2),
-                fny = Math.abs(dataYIndex1-dataYIndex2);
-
             let min = null, max = null;
             for (let y = dataYIndex1; y < dataYIndex2; y++) {
                 this.data[(y-dataYIndex1)] = [];
@@ -227,6 +210,7 @@ class Band{
         return imgBuf
     }
 
+    //noinspection JSUnusedGlobalSymbols
     getValueAt(x, y){
         return this.data[x][y];
     }
@@ -262,7 +246,8 @@ class Band{
         return this.canvas.toDataURL();
     }
 
-    save  (path)  {
+    //noinspection JSUnusedGlobalSymbols
+    save(path)  {
         this.toDataUrl()
         fs.writeFileSync(path, this.canvas.toBuffer('image/png'))
     }
@@ -288,9 +273,7 @@ class Band{
             x1 = this.rasterMeta['x1'],
             y1 = this.rasterMeta['y1'],
             x2 = this.rasterMeta['x2'],
-            y2 = this.rasterMeta['y2'],
-            width = this.rasterMeta['nx'],
-            height = this.rasterMeta['ny'];
+            y2 = this.rasterMeta['y2'];
 
         const canvas = require('./create-canvas')(256, 256);
         const ctx = canvas.getContext('2d');
@@ -302,11 +285,9 @@ class Band{
             for (let xTileIndex = 0; xTileIndex < 256; xTileIndex++) {
                 const lat = tileBbox.lat1 - (tileLatHeight/256*yTiltIndex);
                 const lng = tileBbox.lng1 + (tileLatWidth/256*xTileIndex);
-                // console.log([x1, y1, x2, y2], [lng, lat]);
                 if(!isPtWithInBbox([x1, y1, x2, y2], [lng, lat])){
                     continue
                 }
-                // console.log([x1, y1, x2, y2], [lng, lat]);
                 const dataXIndex = Math.floor((lng-x1)/xRes);
                 const dataYIndex = Math.floor((lat-y1)/yRes);
                 let value = this.data[dataYIndex][dataXIndex];
@@ -324,6 +305,7 @@ class Band{
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
     }
 
+    //noinspection JSUnusedGlobalSymbols
     async generateTiles  (z1, z2, dirPath)  {
         const latLngToTile = (lng, lat, zoom) => {
             let x = (Math.floor((lng+180)/360*Math.pow(2,zoom)));
@@ -340,7 +322,6 @@ class Band{
             const {x:tileX2, y:tileY2} = latLngToTile(x2, y2, z);
             for (let tileX = tileX1; tileX <= tileX2; tileX++) {
                 for (let tileY = tileY1; tileY <= tileY2; tileY++) {
-                    console.log("Generating tile: ", z, tileX, tileY);
                     const imgName = `${tileY}.png`;
                     const imageDirPath = path.join(dirPath, `/${z}/${tileX}/`)
                     if (!fs.existsSync(imageDirPath)){
@@ -380,10 +361,12 @@ class Band{
         return rgbaVal;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     async saveAsDataUrl (path)  {
         await fs.writeFileSync(path, this.toDataUrl());
     }
 
+    //noinspection JSUnusedGlobalSymbols
     async saveAsPng  (path)  {
         let base64Data = this.toDataUrl().replace(/^data:image\/png;base64,/, "");
         await fs.writeFileSync(path, base64Data, {encoding: 'base64'});
@@ -417,9 +400,7 @@ class Band{
         const xRes = this.rasterMeta['xres'],
             yRes = this.rasterMeta['yres'],
             x1 = this.rasterMeta['x1'],
-            y1 = this.rasterMeta['y1'],
-            x2 = this.rasterMeta['x2'],
-            y2 = this.rasterMeta['y2'];
+            y1 = this.rasterMeta['y1'];
         const dataXIndex1 = Math.floor((fx1-x1)/xRes);
         const dataYIndex1 = Math.floor((fy1-y1)/yRes);
         const dataXIndex2 = Math.floor((fx2-x1)/xRes);

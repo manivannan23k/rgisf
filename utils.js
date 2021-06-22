@@ -1,7 +1,5 @@
-
-const PixelType = require('./types')
-const AttrType = require('./attr-types')
-const Renderer = require('./renderer')
+const {PixelType, RendererType, AttributeType} = require('./constants')
+const fs = require('fs');
 const bufferToArrayBuffer = (buf) => {
     const ab = new ArrayBuffer(buf.length);
     const view = new Uint8Array(ab);
@@ -60,7 +58,7 @@ const writeBandValueToBuffer = (vt, value, buffer, offset) => {
     return buffer;
 }
 const getTypeObjFromType = (type) => {
-    switch (type) {
+    switch (type.type) {
         case PixelType.INT8.type:
             return PixelType.INT8;
         case PixelType.INT16.type:
@@ -79,6 +77,23 @@ const getTypeObjFromType = (type) => {
             return PixelType.FLOAT64;
     }
     return PixelType.FLOAT32;
+}
+const getTypeObjFromGdalType = (type) => {
+    switch (type) {
+        case "Int16":
+            return PixelType.INT16;
+        case "Int32":
+            return PixelType.INT32;
+        case "UInt16":
+            return PixelType.UINT16;
+        case "UInt32":
+            return PixelType.UINT32;
+        case "Float32":
+            return PixelType.FLOAT32;
+        case "Float64":
+            return PixelType.FLOAT64;
+    }
+    throw "Pixel data type is not supported";
 }
 const getRasterInitBuffer = ({vt, nb, crs, x1, y1, x2, y2, xRes, yRes, nx, ny, factor}) => {
     let buffer = Buffer.alloc(256);
@@ -122,14 +137,14 @@ const getRendererBuffer = (renderer, bytePerPixel) => {
     let rb = null;
     let rendererSize = 0;
     switch (renderer.type) {
-        case Renderer.STRETCHED:
+        case RendererType.STRETCHED:
             rendererSize = 2 + 4*renderer.definition.colorRamp.length;
             rb = Buffer.alloc(rendererSize);
             rb.writeUInt8(renderer.type, 0);
             rb.writeUInt8(renderer.definition.colorRamp.length, 1);
             rb = writeColorRampToBuffer(rb, renderer.definition.colorRamp, 2);
             break;
-        case Renderer.CLASSIFIED:
+        case RendererType.CLASSIFIED:
             rendererSize = 2 + (4 * 2 + 4) * renderer.definition.classes.length;
             rb = Buffer.alloc(rendererSize);
             rb.writeUInt8(2, 0);
@@ -157,13 +172,13 @@ const getAttrBuffer = (attr) => {
         tempBuf.writeInt16BE(valueType, 2 + fieldSize);
         tempBuf.writeInt16BE(valueSize, 2 + 2 + fieldSize);
         switch (valueType) {
-            case AttrType.VARCHAR.type:
+            case AttributeType.VARCHAR.type:
                 tempBuf.write(valueData, 2 + 2 + 2 + fieldSize);
                 break;
-            case AttrType.BOOL.type:
+            case AttributeType.BOOL.type:
                 tempBuf.writeUInt8(valueData?1:0, 2 + 2 + 2 + fieldSize);
                 break;
-            case AttrType.FLOAT32.type:
+            case AttributeType.FLOAT32.type:
                 tempBuf.writeFloatBE(valueData, 2 + 2 + 2 + fieldSize);
                 break;
         }
@@ -188,14 +203,70 @@ const getAttrValueSize = (value) => {
 const getAttrType = (value) => {
     switch (typeof value) {
         case "string":
-            return AttrType.VARCHAR.type;
+            return AttributeType.VARCHAR.type;
         case "number":
-            return AttrType.FLOAT32.type;
+            return AttributeType.FLOAT32.type;
         case "boolean":
-            return AttrType.BOOL.type;
+            return AttributeType.BOOL.type;
         default:
-            return AttrType.VARCHAR.type;
+            return AttributeType.VARCHAR.type;
     }
+}
+
+
+const getPixelType  = (v) => {
+    return Object.keys(PixelType).map(key=>{
+        const t = PixelType[key];
+        if (t['type']===v){
+            return t;
+        }else{
+            return null;
+        }
+    }).filter(e=>e!==null)[0]||null;
+}
+
+
+const bufferToCanvas = (imgBuf, nx, ny) => {
+    const canvas = require('./create-canvas')(nx, ny)
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.createImageData(nx, ny);
+    imageData.data.set(imgBuf);
+    ctx.putImageData(imageData, 0, 0);
+    return canvas;
+}
+
+const mergeBandImgBuffers = (bufLength, arr) => {
+    const imgBuf = new Uint8ClampedArray(bufLength);
+    for (let i = 0; i < bufLength; i++) {
+        let t = 0;
+        for (let j = 0; j < arr.length; j++) {
+            t += arr[j][i];
+        }
+        imgBuf[i] = t/arr.length;
+    }
+    return arr[0]
+}
+
+const readFile = (path) => {
+    return fs.readFileSync(path)
+}
+
+const validUrl = (str) => {
+    const pattern = new RegExp("^((https|http|ftp|rtsp|mms)?://)"
+        + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp
+        + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP
+        + "|" // 允许IP和DOMAIN（域名）
+        + "([0-9a-z_!~*'()-]+\.)*" // www.
+        + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
+        + "[a-z]{2,6})" // first level domain- .com
+        + "(:[0-9]{1,4})?" //:80
+        + "((/?)|" // a slash isn't required if there is no file name
+        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$");
+    return !!pattern.test(str);
+}
+
+const validPath = (string) => {
+    return fs.existsSync(string);
 }
 
 module.exports = {
@@ -207,5 +278,12 @@ module.exports = {
     writeClassesToBuffer,
     writeColorRampToBuffer,
     getTypeObjFromType,
-    getAttrBuffer
+    getAttrBuffer,
+    getPixelType,
+    bufferToCanvas,
+    mergeBandImgBuffers,
+    readFile,
+    validUrl,
+    validPath,
+    getTypeObjFromGdalType
 }
