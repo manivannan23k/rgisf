@@ -1,6 +1,6 @@
 {
   "name": "rgisf",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Raster GIS file format",
   "main": "index.js",
   "scripts": {
