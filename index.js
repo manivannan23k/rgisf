@@ -202,6 +202,13 @@ class RGisFile{
         return zlib.deflateSync(this.toBuffer());
     }
 
+    getBands(){
+        return this.bands;
+    }
+    getMetaData(){
+        return this.rasterMeta;
+    }
+
     getRegion(fx1, fy1, fx2, fy2){
         const nb = this.bands.length;
         const xRes = this.rasterMeta['xres'],
@@ -250,6 +257,22 @@ class RGisFile{
     static async fromGeoTiffBuffer(buffer, options){
         return await this.geoTiffBufferToRgf(buffer, options);
     }
+
+    static combineBands(rgfFiles, options){
+        const rgf = new RGisFile(null, options);
+        rgf.rasterMeta = rgfFiles[0].getMetaData();
+        rgf.rasterMeta['nb'] = 0;
+        rgf.bands = [];
+        for (const rgfFile of rgfFiles) {
+            const bands = rgfFile.getBands();
+            for (const band of bands) {
+                rgf.bands.push(band);
+                rgf.rasterMeta['nb']++;
+            }
+        }
+        return rgf;
+    }
+
 
     static async fromGeoTiffUrl(url, options){
         const response = await fetch(url);
