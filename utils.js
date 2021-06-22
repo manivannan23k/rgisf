@@ -1,5 +1,6 @@
 
 const PixelType = require('./types')
+const AttrType = require('./attr-types')
 const Renderer = require('./renderer')
 const bufferToArrayBuffer = (buf) => {
     const ab = new ArrayBuffer(buf.length);
@@ -139,6 +140,64 @@ const getRendererBuffer = (renderer, bytePerPixel) => {
     return rb;
 }
 
+const getAttrBuffer = (attr) => {
+    let buffer = Buffer.alloc(2);
+    const fields = Object.keys(attr);
+    const fieldSize = fields.length;
+    buffer.writeInt16BE(fieldSize);
+    for (const field of fields) {
+        const fieldData = field;//str
+        const fieldSize = field.length;//int16be
+        const valueData = attr[field];//
+        const valueType = getAttrType(valueData);//int16be
+        const valueSize = getAttrValueSize(valueData);//int16be
+        let tempBuf = Buffer.alloc(fieldSize+valueSize+2+2+2);
+        tempBuf.writeInt16BE(fieldSize, 0);
+        tempBuf.write(fieldData, 2);
+        tempBuf.writeInt16BE(valueType, 2 + fieldSize);
+        tempBuf.writeInt16BE(valueSize, 2 + 2 + fieldSize);
+        switch (valueType) {
+            case AttrType.VARCHAR.type:
+                tempBuf.write(valueData, 2 + 2 + 2 + fieldSize);
+                break;
+            case AttrType.BOOL.type:
+                tempBuf.writeUInt8(valueData?1:0, 2 + 2 + 2 + fieldSize);
+                break;
+            case AttrType.FLOAT32.type:
+                tempBuf.writeFloatBE(valueData, 2 + 2 + 2 + fieldSize);
+                break;
+        }
+        buffer = Buffer.concat([buffer, tempBuf]);
+    }
+    return buffer;
+}
+
+const getAttrValueSize = (value) => {
+    switch (typeof value) {
+        case "string":
+            return value.length;
+        case "number":
+            return 4;
+        case "boolean":
+            return 1;
+        default:
+            return value.length;
+    }
+}
+
+const getAttrType = (value) => {
+    switch (typeof value) {
+        case "string":
+            return AttrType.VARCHAR.type;
+        case "number":
+            return AttrType.FLOAT32.type;
+        case "boolean":
+            return AttrType.BOOL.type;
+        default:
+            return AttrType.VARCHAR.type;
+    }
+}
+
 module.exports = {
     getRasterInitBuffer,
     getRendererBuffer,
@@ -147,5 +206,6 @@ module.exports = {
     writeBandValueToBuffer,
     writeClassesToBuffer,
     writeColorRampToBuffer,
-    getTypeObjFromType
+    getTypeObjFromType,
+    getAttrBuffer
 }

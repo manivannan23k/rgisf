@@ -15,7 +15,8 @@ const {
     writeBandValueToBuffer,
     writeClassesToBuffer,
     writeColorRampToBuffer,
-    getTypeObjFromType
+    getTypeObjFromType,
+    getAttrBuffer
 } = require('./utils')
 
 const defaultRenderer = {
@@ -40,13 +41,15 @@ class RGisFile{
         this.factor = null;
         this.options = {
             renderer: defaultRenderer,
-            bbox: null
+            bbox: null,
+            attrs: []
         }
 
         if(options){
             this.options.renderer = options.renderer || defaultRenderer;
             this.options.bbox = options.bbox;
             this.factor = options.factor;
+            this.options.attrs = options.attrs || [];
         }
         if (data){
             this.init(zlib.unzipSync(data));
@@ -273,10 +276,12 @@ class RGisFile{
     static async geoTiffBufferToRgf (data, options) {
         const rgf = new RGisFile(null);
         let filterBox = null;
+        let attrs = [];
         if(options){
             rgf.options.renderer = options.renderer || defaultRenderer;
             rgf.options.readAs = options.readAs;
             filterBox = options.bbox;
+            attrs = options.attrs || attrs;
         }
         const tiff = await GeoTIFF.fromArrayBuffer(bufferToArrayBuffer(data));
         const image = await tiff.getImage();
@@ -320,6 +325,9 @@ class RGisFile{
         })
 
         for (let bandNo = 0; bandNo < bands.length; bandNo++) {
+            let attr = {};
+            if (attrs.length>bandNo)
+                attr = attrs[bandNo];
             const band = bands[bandNo];
 
             let min = null, max = null;
@@ -340,6 +348,7 @@ class RGisFile{
             writeBandValueToBuffer(vt.type, min, bandMetaBuffer, 0);
             writeBandValueToBuffer(vt.type, max, bandMetaBuffer, vt.size);
             buffer = Buffer.concat([buffer, bandMetaBuffer]);
+            buffer = Buffer.concat([buffer, getAttrBuffer(attr)]);
             buffer = Buffer.concat([buffer, getRendererBuffer(rgf.options.renderer, bytesPerPixel)]);
             buffer = Buffer.concat([buffer, imgBuffer]);
         }
@@ -383,7 +392,10 @@ class RGisFile{
         const tempOffset = this._offset;
         this.bands = [];
         for (let i = 0; i < this.rasterMeta['nb']; i++) {
-            let band = new Band(this._buffer, this._offset, this.rasterMeta, this.regionFilter, this.options.renderer);
+            let attr = {};
+            if (this.options.attrs.length>i)
+                attr = this.options.attrs[i];
+            let band = new Band(this._buffer, this._offset, this.rasterMeta, this.regionFilter, this.options.renderer, attr);
             this.bands.push(band);
             this._offset = band.offset;
         }

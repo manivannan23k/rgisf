@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path')
 const PixelType = require('./types')
+const AttrType = require('./attr-types')
 const Renderer = require('./renderer')
 const {
     getRasterInitBuffer,
@@ -9,15 +10,17 @@ const {
     getPixelTypeFromObj,
     writeBandValueToBuffer,
     writeClassesToBuffer,
-    writeColorRampToBuffer
+    writeColorRampToBuffer,
+    getAttrBuffer
 } = require('./utils')
 
 class Band{
 
-    constructor(buffer, offset, rasterMeta, regionFilter, renderer){
+    constructor(buffer, offset, rasterMeta, regionFilter, renderer, attr){
 
         this.offset = 0
         this.renderer = renderer
+        this.attr = attr
         this.dataOffset = 0
         this.buffer = Buffer.from(new ArrayBuffer(0))
         this.rasterMeta = null
@@ -31,6 +34,7 @@ class Band{
         this.regionFilter = regionFilter;
         this.rasterMeta = rasterMeta;
         this.readBandMetaData();
+        this.readBandAttr();
         this.readBandRenderer();
         this.readBandData();
         delete this.buffer;
@@ -40,6 +44,42 @@ class Band{
         const typ = this.rasterMeta['vt'];
         this.metaData = {min: this.readValueOfType(typ.type, this.offset).value, max: this.readValueOfType(typ.type, this.offset+typ.size).value};
         this.offset += 256;
+    }
+
+    readBandAttr () {
+        //attr_count
+        //field_size, field_data, value_type, value_size, value_data
+        const dataAttr = {};
+        const attrCount = this.buffer.readInt16BE(this.offset);
+        this.offset += 2;
+        for (let i = 0; i < attrCount; i++) {
+            const fieldSize = this.buffer.readInt16BE(this.offset);
+            this.offset += 2;
+            const fieldData = this.readAttrOfType(AttrType.VARCHAR.type, fieldSize, this.offset);
+            this.offset += fieldSize;
+            const valueType = this.buffer.readInt16BE(this.offset);
+            this.offset += 2;
+            console.log(this.offset)
+            const valueSize = this.buffer.readInt16BE(this.offset);
+            this.offset += 2;
+            const valueData = this.readAttrOfType(valueType, valueSize, this.offset);
+            this.offset += valueSize;
+            // console.log(fieldData, valueData);
+            dataAttr[fieldData] = valueData;
+        }
+        this.attr = { ...dataAttr, ...this.attr };
+    }
+
+    readAttrOfType(type, size, offset){
+        switch (type) {
+            case AttrType.BOOL.type:
+                return this.buffer.readUInt8(offset) !== 0;
+            case AttrType.VARCHAR.type:
+                return this.buffer.toString('utf8', offset, offset + size);
+            case AttrType.FLOAT32.type:
+                return this.buffer.readFloatBE(offset);
+        }
+        return null;
     }
 
     readBandRenderer  ()  {
@@ -367,11 +407,11 @@ class Band{
         writeBandValueToBuffer(vt.type, min, bandMetaBuffer, 0);
         writeBandValueToBuffer(vt.type, max, bandMetaBuffer, vt.size);
         buffer = Buffer.concat([buffer, bandMetaBuffer]);
+        buffer = Buffer.concat([buffer, getAttrBuffer(this.attr)]);
         buffer = Buffer.concat([buffer, getRendererBuffer(this.renderer, vt.size)]);
         buffer = Buffer.concat([buffer, imgBuffer]);
         return buffer;
     }
-
 
     getRegion  (fx1, fy1, fx2, fy2)  {
         const xRes = this.rasterMeta['xres'],
