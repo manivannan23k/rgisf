@@ -1,3 +1,4 @@
+const StretchedRenderer = require('./stretched-renderer');
 
 const AttributeType = {
     FLOAT32: {
@@ -54,15 +55,7 @@ const RendererType = {
     CLASSIFIED: 2
 }
 
-const defaultRenderer = {
-    type: RendererType.STRETCHED,
-    definition: {
-        colorRamp: [
-            [0, 0, 0, 255],
-            [255, 255, 255, 255]
-        ]
-    }
-};
+const defaultRenderer = new StretchedRenderer();
 
 const defaultCrs = 4326;
 

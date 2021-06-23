@@ -1,5 +1,6 @@
 const Band = require('./band');
 const RasterMetadata = require('./raster-metadata');
+const RasterOptions = require('./raster-options');
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
@@ -20,11 +21,7 @@ class RGisFile{
         this.bands = [];
         this.offset = 0;
         this.factor = null;
-        this.options = {
-            renderer: defaultRenderer,
-            bbox: null,
-            attrs: []
-        }
+        this.options = new RasterOptions();
 
         if(options){
             this.options.renderer = options.renderer || defaultRenderer;

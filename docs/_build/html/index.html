@@ -1,203 +1,410 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>rgisf’s documentation! &mdash; rgisf  documentation</title>
-  
 
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGisF &#8212; rgisf  documentation</title>
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
 
     
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
-</head>
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="#" class="icon icon-home"> rgisf
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">rgisf’s documentation!</a><ul>
-<li><a class="reference internal" href="#api-docs">Api Docs</a><ul>
-<li><a class="reference internal" href="#class-rgisfile">Class: RGisFile</a><ul>
-<li><a class="reference internal" href="#instance-builders">Instance builders</a><ul>
-<li><a class="reference internal" href="#static-rgisfile-from-data-options-iscompressed-true">static RGisFile.from(data, [options], [isCompressed=true])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromgeotiff-data-options-iscompressed-true">static RGisFile.fromGeoTiff(data, [options], [isCompressed=true])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-frombuffer-buffer-options">static RGisFile.fromBuffer(buffer, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromubuffer-buffer-options">static RGisFile.fromUBuffer(buffer, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromfile-path-options">static RGisFile.fromFile(path, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromufile-path-options">static RGisFile.fromUFile(path, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromurl-url-options">static RGisFile.fromUrl(url, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromuurl-url-options">static RGisFile.fromUUrl(url, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromgeotiffurl-url-options">static RGisFile.fromGeoTiffUrl(url, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-fromgeotifffile-path-options">static RGisFile.fromGeoTiffFile(path, [options])</a></li>
-<li><a class="reference internal" href="#static-rgisfile-combine-rgfiles-options">static RGisFile.combine(rgFiles, [options])</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#saving-data">Saving data</a><ul>
-<li><a class="reference internal" href="#rgisfile-savetofile-filepath">RGisFile.saveToFile(filePath)</a></li>
-<li><a class="reference internal" href="#rgisfile-savetoufile-filepath">RGisFile.saveToUFile(filePath)</a></li>
-<li><a class="reference internal" href="#rgisfile-saveaspng-filepath">RGisFile.saveAsPng(filePath)</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#accessors">Accessors</a><ul>
-<li><a class="reference internal" href="#rgisfile-tobuffer">RGisFile.toBuffer()</a></li>
-<li><a class="reference internal" href="#rgisfile-tocompressedbuffer">RGisFile.toCompressedBuffer()</a></li>
-<li><a class="reference internal" href="#rgisfile-todataurl">RGisFile.toDataUrl()</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
       
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">rgisf</a>
-        
-      </nav>
 
+    
+    <link rel="stylesheet" href="_static/sphinx-book-theme.acff12b8f9c144ce68a297486a2fa670.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
 
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="#">
+      
+      
+      <h1 class="site-logo" id="site-title">rgisf  documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
         
-      <li>rgisf’s documentation!</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
+    </div>
+</nav> <!-- To handle the deprecated key -->
 
-  
-  <hr/>
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
             
-  <div class="section" id="rgisf-s-documentation">
-<h1>rgisf’s documentation!<a class="headerlink" href="#rgisf-s-documentation" title="Permalink to this headline">¶</a></h1>
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/index.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#docs">
+   1. Docs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#class-rgisfile">
+     1.1. Class: RGisFile
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#static-methods">
+       static methods
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-from-data-options-iscompressed-true">
+         1.1.1. static RGisFile.from(data, [options], [isCompressed=true])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromgeotiff-data-options-iscompressed-true">
+         1.1.2. static RGisFile.fromGeoTiff(data, [options], [isCompressed=true])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-frombuffer-buffer-options">
+         1.1.3. static RGisFile.fromBuffer(buffer, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromubuffer-buffer-options">
+         1.1.4. static RGisFile.fromUBuffer(buffer, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromfile-path-options">
+         1.1.5. static RGisFile.fromFile(path, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromufile-path-options">
+         1.1.6. static RGisFile.fromUFile(path, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromurl-url-options">
+         1.1.7. static RGisFile.fromUrl(url, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromuurl-url-options">
+         1.1.8. static RGisFile.fromUUrl(url, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromgeotiffurl-url-options">
+         1.1.9. static RGisFile.fromGeoTiffUrl(url, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-fromgeotifffile-path-options">
+         1.1.10. static RGisFile.fromGeoTiffFile(path, [options])
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#static-rgisfile-combine-rgfiles-options">
+         1.1.11. static RGisFile.combine(rgFiles, [options])
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#methods">
+       Methods
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-savetofile-filepath">
+         1.1.12. RGisFile.saveToFile(filePath)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-savetoufile-filepath">
+         1.1.13. RGisFile.saveToUFile(filePath)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-saveaspng-filepath">
+         1.1.14. RGisFile.saveAsPng(filePath)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-tobuffer">
+         1.1.15. RGisFile.toBuffer()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-tocompressedbuffer">
+         1.1.16. RGisFile.toCompressedBuffer()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-todataurl">
+         1.1.17. RGisFile.toDataUrl()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getmetadata">
+         1.1.18. RGisFile.getMetaData()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getbbox">
+         1.1.19. RGisFile.getBbox()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getnoofbands">
+         1.1.20. RGisFile.getNoOfBands()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getcoordinatesystem">
+         1.1.21. RGisFile.getCoordinateSystem()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getxresolution">
+         1.1.22. RGisFile.getXResolution()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getyresolution">
+         1.1.23. RGisFile.getYResolution()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getwidth">
+         1.1.24. RGisFile.getWidth()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getheight">
+         1.1.25. RGisFile.getHeight()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-getbands">
+         1.1.26. RGisFile.getBands()
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-gettileimage-x-y-z">
+         1.1.12. RGisFile.getTileImage(x, y, z)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#rgisfile-generatetiles-z1-z2-dirpath">
+         1.1.12. RGisFile.generateTiles(z1, z2, dirPath)
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#class-band">
+     1.2. Class Band
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#band-accessors">
+       Band accessors
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#band-getvalueat-x-y">
+         1.4.1. Band.getValueAt(x, y)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#band-todataurl-x-y">
+         1.4.2. Band.toDataUrl(x, y)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#band-gettileimage-x-y-z">
+         1.4.3. Band.getTileImage(x, y, z)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#band-generatetiles-z1-z2-dirpath">
+         1.4.4. Band.generateTiles(z1, z2, dirPath)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#band-saveaspng-filepath">
+         1.4.5. Band.saveAsPng(filePath)
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#band-savetileaspng-x-y-z-filepath">
+         1.4.6. Band.saveTileAsPng(x, y, z, filePath)
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#renderers">
+     1.3. Renderers
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#class-stretchedrenderer-colorramp">
+       1.3.1. Class StretchedRenderer([colorRamp])
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#class-classifiedrenderer-classes">
+       1.3.2. Class ClassifiedRenderer([classes])
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#misc">
+     1.4. Misc
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#rasteroptions">
+       1.4.1 RasterOptions
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#pixeltype">
+       1.4.2 PixelType
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="rgisf">
+<h1>RGisF<a class="headerlink" href="#rgisf" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>RGisF is a collection of helper methods to work with raster data mainly in web applications. It saves data in a customized format <code class="docutils literal notranslate"><span class="pre">.rgisf</span></code> (compressed: default) or <code class="docutils literal notranslate"><span class="pre">.urgisf</span></code> (uncompressed) data and can be read using any of the client libraries. Please, check the use cases for using this format and library for more details.</p>
+<p><br> <strong>Note:</strong> Currently, it is only available in NodeJs and only supports coordinate system CRS:4326. Support to more frameworks and coordinates system will be added soon.
+<br> <strong>Next release:</strong> independent browser support + CRS:3857</p>
+</div></blockquote>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="api-docs">
-<h2>Api Docs<a class="headerlink" href="#api-docs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="docs">
+<h2>1. Docs<a class="headerlink" href="#docs" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
-<dt><a class="reference internal" href="#class-rgisfile">Class RGisFile</a></dt><dd><ul>
+<dt><a class="reference internal" href="#class-rgisfile">1.1. Class RGisFile</a></dt><dd><ul>
 <li><dl class="simple">
-<dt><a class="reference internal" href="#instance-builders">Instance builders</a></dt><dd><ul>
+<dt><a class="reference internal" href="#static-methods">Static methods</a></dt><dd><ul>
 <li><p><a class="reference internal" href="#static-rgisfile-from-data-options-iscompressed-true">static RGisFile.from(data, [options], [isCompressed=true])</a></p></li>
 <li><p><a class="reference internal" href="#static-rgisfile-fromgeotiff-data-options">static RGisFile.fromGeoTiff(data, [options])</a></p></li>
 <li><p><a class="reference internal" href="#static-rgisfile-frombuffer-buffer-options">static RGisFile.fromBuffer(buffer, [options])</a></p></li>
@@ -214,25 +421,72 @@
 </dl>
 </li>
 <li><dl class="simple">
-<dt><a class="reference internal" href="#saving-data">Saving data</a></dt><dd><ul>
+<dt><a class="reference internal" href="#methods">Methods</a></dt><dd><ul>
 <li><p><a class="reference internal" href="#rgisfile-savetofile-filepath">RGisFile.saveToFile(filePath)</a></p></li>
 <li><p><a class="reference internal" href="#rgisfile-savetoufile-filepath">RGisFile.saveToUFile(filePath)</a></p></li>
 <li><p><a class="reference internal" href="#rgisfile-saveaspng-filepath">RGisFile.saveAsPng(filePath)</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-tobuffer">RGisFile.toBuffer()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-tocompressedbuffer">RGisFile.toCompressedBuffer()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-todataurl">RGisFile.toDataUrl()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getmetadata">RGisFile.getMetaData()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getbbox">RGisFile.getBbox()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getnoofbands">RGisFile.getNoOfBands()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getcoordinatesystem">RGisFile.getCoordinateSystem()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getxresolution">RGisFile.getXResolution()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getyresolution">RGisFile.getYResolution()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getwidth">RGisFile.getWidth()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getheight">RGisFile.getHeight()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-getbands">RGisFile.getBands()</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-gettileimage-x-y-z">RGisFile.getTileImage(x, y, z)</a></p></li>
+<li><p><a class="reference internal" href="#rgisfile-generatetiles-z1-z2-dirpath">RGisFile.generateTiles(z1, z2, dirPath)</a></p></li>
 </ul>
 </dd>
 </dl>
 </li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#class-band">1.2. Class Band</a></dt><dd><ul>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#methods">Methods</a></dt><dd><ul>
+<li><p><a class="reference internal" href="#band-getvalueat-x-y">Band.getValueAt(x, y)</a></p></li>
+<li><p><a class="reference internal" href="#band-todataurl">Band.toDataUrl()</a></p></li>
+<li><p><a class="reference internal" href="#band-saveaspng-filepath">Band.saveAsPng(filePath)</a></p></li>
+<li><p><a class="reference internal" href="#band-savetileaspng-x-y-z-filepath">Band.saveTileAsPng(x, y, z, filePath)</a></p></li>
+<li><p><a class="reference internal" href="#band-gettileimage-x-y-z">Band.getTileImage(x, y, z)</a></p></li>
+<li><p><a class="reference internal" href="#band-generatetiles-z1-z2-dirpath">Band.generateTiles(z1, z2, dirPath)</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#renderers">1.3. Renderers</a></dt><dd><ul>
+<li><p><a class="reference internal" href="#class-stretchedrenderer">Class StretchedRenderer</a></p></li>
+<li><p><a class="reference internal" href="#class-classifiedrenderer">Class ClassifiedRenderer</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#misc">1.4. Misc</a></dt><dd><ul>
+<li><p><a class="reference internal" href="#rasteroptions">RasterOptions</a></p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
 <div class="section" id="class-rgisfile">
-<span id="id1"></span><h3>Class: RGisFile<a class="headerlink" href="#class-rgisfile" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="instance-builders">
-<span id="id2"></span><h4>Instance builders<a class="headerlink" href="#instance-builders" title="Permalink to this headline">¶</a></h4>
+<span id="id1"></span><h3>1.1. Class: RGisFile<a class="headerlink" href="#class-rgisfile" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="static-methods">
+<span id="id2"></span><h4>static methods<a class="headerlink" href="#static-methods" title="Permalink to this headline">¶</a></h4>
 <div class="section" id="static-rgisfile-from-data-options-iscompressed-true">
-<span id="id3"></span><h5>static RGisFile.from(data, [options], [isCompressed=true])<a class="headerlink" href="#static-rgisfile-from-data-options-iscompressed-true" title="Permalink to this headline">¶</a></h5>
+<span id="id3"></span><h5>1.1.1. static RGisFile.from(data, [options], [isCompressed=true])<a class="headerlink" href="#static-rgisfile-from-data-options-iscompressed-true" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> - Buffer, path or url</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -255,7 +509,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromgeotiff-data-options-iscompressed-true">
-<span id="static-rgisfile-fromgeotiff-data-options"></span><h5>static RGisFile.fromGeoTiff(data, [options], [isCompressed=true])<a class="headerlink" href="#static-rgisfile-fromgeotiff-data-options-iscompressed-true" title="Permalink to this headline">¶</a></h5>
+<span id="static-rgisfile-fromgeotiff-data-options"></span><h5>1.1.2. static RGisFile.fromGeoTiff(data, [options], [isCompressed=true])<a class="headerlink" href="#static-rgisfile-fromgeotiff-data-options-iscompressed-true" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> - Buffer, path or url</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -277,7 +531,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-frombuffer-buffer-options">
-<span id="id4"></span><h5>static RGisFile.fromBuffer(buffer, [options])<a class="headerlink" href="#static-rgisfile-frombuffer-buffer-options" title="Permalink to this headline">¶</a></h5>
+<span id="id4"></span><h5>1.1.3. static RGisFile.fromBuffer(buffer, [options])<a class="headerlink" href="#static-rgisfile-frombuffer-buffer-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">buffer</span></code> - RGisFile buffer</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -291,7 +545,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromubuffer-buffer-options">
-<span id="id5"></span><h5>static RGisFile.fromUBuffer(buffer, [options])<a class="headerlink" href="#static-rgisfile-fromubuffer-buffer-options" title="Permalink to this headline">¶</a></h5>
+<span id="id5"></span><h5>1.1.4. static RGisFile.fromUBuffer(buffer, [options])<a class="headerlink" href="#static-rgisfile-fromubuffer-buffer-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">buffer</span></code> - Uncompressed RGisFile buffer</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -305,7 +559,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromfile-path-options">
-<span id="id6"></span><h5>static RGisFile.fromFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromfile-path-options" title="Permalink to this headline">¶</a></h5>
+<span id="id6"></span><h5>1.1.5. static RGisFile.fromFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromfile-path-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> - RGisFile path</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -317,7 +571,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromufile-path-options">
-<span id="id7"></span><h5>static RGisFile.fromUFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromufile-path-options" title="Permalink to this headline">¶</a></h5>
+<span id="id7"></span><h5>1.1.6. static RGisFile.fromUFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromufile-path-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> - Uncompressed RGisFile path</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -329,7 +583,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromurl-url-options">
-<span id="id8"></span><h5>static RGisFile.fromUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromurl-url-options" title="Permalink to this headline">¶</a></h5>
+<span id="id8"></span><h5>1.1.7. static RGisFile.fromUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromurl-url-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">url</span></code> - RGisFile url</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -341,7 +595,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromuurl-url-options">
-<span id="id9"></span><h5>static RGisFile.fromUUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromuurl-url-options" title="Permalink to this headline">¶</a></h5>
+<span id="id9"></span><h5>1.1.8. static RGisFile.fromUUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromuurl-url-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">url</span></code> - Uncompressed RGisFile url</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -353,7 +607,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromgeotiffurl-url-options">
-<span id="id10"></span><h5>static RGisFile.fromGeoTiffUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromgeotiffurl-url-options" title="Permalink to this headline">¶</a></h5>
+<span id="id10"></span><h5>1.1.9. static RGisFile.fromGeoTiffUrl(url, [options])<a class="headerlink" href="#static-rgisfile-fromgeotiffurl-url-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">url</span></code> - Buffer</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -365,7 +619,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-fromgeotifffile-path-options">
-<span id="id11"></span><h5>static RGisFile.fromGeoTiffFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromgeotifffile-path-options" title="Permalink to this headline">¶</a></h5>
+<span id="id11"></span><h5>1.1.10. static RGisFile.fromGeoTiffFile(path, [options])<a class="headerlink" href="#static-rgisfile-fromgeotifffile-path-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> - GeoTiff path</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -377,7 +631,7 @@
 </div>
 </div>
 <div class="section" id="static-rgisfile-combine-rgfiles-options">
-<span id="id12"></span><h5>static RGisFile.combine(rgFiles, [options])<a class="headerlink" href="#static-rgisfile-combine-rgfiles-options" title="Permalink to this headline">¶</a></h5>
+<span id="id12"></span><h5>1.1.11. static RGisFile.combine(rgFiles, [options])<a class="headerlink" href="#static-rgisfile-combine-rgfiles-options" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">rgFiles</span></code> - Array of RGisFile objects</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - Options</p></li>
@@ -391,10 +645,10 @@
 </div>
 </div>
 </div>
-<div class="section" id="saving-data">
-<span id="id13"></span><h4>Saving data<a class="headerlink" href="#saving-data" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="methods">
+<span id="id13"></span><h4>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h4>
 <div class="section" id="rgisfile-savetofile-filepath">
-<span id="id14"></span><h5>RGisFile.saveToFile(filePath)<a class="headerlink" href="#rgisfile-savetofile-filepath" title="Permalink to this headline">¶</a></h5>
+<span id="id14"></span><h5>1.1.12. RGisFile.saveToFile(filePath)<a class="headerlink" href="#rgisfile-savetofile-filepath" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the data</p></li>
 </ul>
@@ -406,7 +660,7 @@
 </div>
 </div>
 <div class="section" id="rgisfile-savetoufile-filepath">
-<span id="id15"></span><h5>RGisFile.saveToUFile(filePath)<a class="headerlink" href="#rgisfile-savetoufile-filepath" title="Permalink to this headline">¶</a></h5>
+<span id="id15"></span><h5>1.1.13. RGisFile.saveToUFile(filePath)<a class="headerlink" href="#rgisfile-savetoufile-filepath" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the data</p></li>
 </ul>
@@ -418,7 +672,7 @@
 </div>
 </div>
 <div class="section" id="rgisfile-saveaspng-filepath">
-<span id="id16"></span><h5>RGisFile.saveAsPng(filePath)<a class="headerlink" href="#rgisfile-saveaspng-filepath" title="Permalink to this headline">¶</a></h5>
+<span id="id16"></span><h5>1.1.14. RGisFile.saveAsPng(filePath)<a class="headerlink" href="#rgisfile-saveaspng-filepath" title="Permalink to this headline">¶</a></h5>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the rendered png image</p></li>
 </ul>
@@ -429,11 +683,8 @@
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="accessors">
-<span id="id17"></span><h4>Accessors<a class="headerlink" href="#accessors" title="Permalink to this headline">¶</a></h4>
 <div class="section" id="rgisfile-tobuffer">
-<span id="id18"></span><h5>RGisFile.toBuffer()<a class="headerlink" href="#rgisfile-tobuffer" title="Permalink to this headline">¶</a></h5>
+<span id="id17"></span><h5>1.1.15. RGisFile.toBuffer()<a class="headerlink" href="#rgisfile-tobuffer" title="Permalink to this headline">¶</a></h5>
 <p>Returns the data in uncompressed buffer format.</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
 <span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
@@ -442,7 +693,7 @@
 </div>
 </div>
 <div class="section" id="rgisfile-tocompressedbuffer">
-<span id="id19"></span><h5>RGisFile.toCompressedBuffer()<a class="headerlink" href="#rgisfile-tocompressedbuffer" title="Permalink to this headline">¶</a></h5>
+<span id="id18"></span><h5>1.1.16. RGisFile.toCompressedBuffer()<a class="headerlink" href="#rgisfile-tocompressedbuffer" title="Permalink to this headline">¶</a></h5>
 <p>Returns the data in compressed buffer format.</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
 <span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
@@ -451,7 +702,7 @@
 </div>
 </div>
 <div class="section" id="rgisfile-todataurl">
-<span id="id20"></span><h5>RGisFile.toDataUrl()<a class="headerlink" href="#rgisfile-todataurl" title="Permalink to this headline">¶</a></h5>
+<span id="id19"></span><h5>1.1.17. RGisFile.toDataUrl()<a class="headerlink" href="#rgisfile-todataurl" title="Permalink to this headline">¶</a></h5>
 <p>Returns the data as a rendered png data url (using the specified renderer. If not specified, default renderer will be used).</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
 <span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
@@ -459,53 +710,421 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="rgisfile-getmetadata">
+<span id="id20"></span><h5>1.1.18. RGisFile.getMetaData()<a class="headerlink" href="#rgisfile-getmetadata" title="Permalink to this headline">¶</a></h5>
+<p>Returns RasterMetadata object for the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">metaData</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getMetaData</span><span class="p">();</span>
+<span class="cm">/*</span>
+<span class="cm">* returns RasterMetadata {</span>
+<span class="cm">*   pixelType, noOfBands, coordinateSystem</span>
+<span class="cm">*   x1, y1, x2, y2,</span>
+<span class="cm">*   xResolution, yResolution,</span>
+<span class="cm">*   width, height</span>
+<span class="cm">* }</span>
+<span class="cm">*/</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getbbox">
+<span id="id21"></span><h5>1.1.19. RGisFile.getBbox()<a class="headerlink" href="#rgisfile-getbbox" title="Permalink to this headline">¶</a></h5>
+<p>Returns bbox array <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code> for the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">bbox</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getBounds</span><span class="p">();</span>
+<span class="cm">/*</span>
+<span class="cm">* returns ``[x1, y1, x2, y2]``</span>
+<span class="cm">*/</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getnoofbands">
+<span id="id22"></span><h5>1.1.20. RGisFile.getNoOfBands()<a class="headerlink" href="#rgisfile-getnoofbands" title="Permalink to this headline">¶</a></h5>
+<p>Returns the number of bands <code class="docutils literal notranslate"><span class="pre">integer</span></code> in the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">noOfBands</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getNoOfBands</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getcoordinatesystem">
+<span id="id23"></span><h5>1.1.21. RGisFile.getCoordinateSystem()<a class="headerlink" href="#rgisfile-getcoordinatesystem" title="Permalink to this headline">¶</a></h5>
+<p>Returns coordinates system <code class="docutils literal notranslate"><span class="pre">integer</span></code> used in the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">crs</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getCoordinateSystem</span><span class="p">();</span> <span class="c1">//Eg: 4326</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getxresolution">
+<span id="id24"></span><h5>1.1.22. RGisFile.getXResolution()<a class="headerlink" href="#rgisfile-getxresolution" title="Permalink to this headline">¶</a></h5>
+<p>Returns x resolution <code class="docutils literal notranslate"><span class="pre">float</span></code> of the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">xRes</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getXResolution</span><span class="p">();</span> <span class="c1">//Eg: 0.0025</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getyresolution">
+<span id="id25"></span><h5>1.1.23. RGisFile.getYResolution()<a class="headerlink" href="#rgisfile-getyresolution" title="Permalink to this headline">¶</a></h5>
+<p>Returns y resolution <code class="docutils literal notranslate"><span class="pre">float</span></code> of the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">yRes</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getYResolution</span><span class="p">();</span> <span class="c1">//Eg: 0.0025</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getwidth">
+<span id="id26"></span><h5>1.1.24. RGisFile.getWidth()<a class="headerlink" href="#rgisfile-getwidth" title="Permalink to this headline">¶</a></h5>
+<p>Returns width (no of pixels in x-direction) <code class="docutils literal notranslate"><span class="pre">integer</span></code> in the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">width</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getWidth</span><span class="p">();</span> <span class="c1">//Eg: 542</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getheight">
+<span id="id27"></span><h5>1.1.25. RGisFile.getHeight()<a class="headerlink" href="#rgisfile-getheight" title="Permalink to this headline">¶</a></h5>
+<p>Returns height (no of pixels in y-direction) <code class="docutils literal notranslate"><span class="pre">integer</span></code> in the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">height</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getHeight</span><span class="p">();</span> <span class="c1">//Eg: 845</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-getbands">
+<span id="id28"></span><h5>1.1.26. RGisFile.getBands()<a class="headerlink" href="#rgisfile-getbands" title="Permalink to this headline">¶</a></h5>
+<p>Returns Bands <code class="docutils literal notranslate"><span class="pre">array</span> <span class="pre">of</span> <span class="pre">Band</span></code> in the RGisFile.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">bands</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getBands</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-gettileimage-x-y-z">
+<span id="id29"></span><h5>1.1.12. RGisFile.getTileImage(x, y, z)<a class="headerlink" href="#rgisfile-gettileimage-x-y-z" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> - tile coordinate x</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code> - tile coordinate y</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z</span></code> - tile coordinate z (Zoom level)</p></li>
+</ul>
+<p>Returns a canvas object with rendered data of the RGisFile. It uses whichever renderer is passed while creating the object or uses the existing one/default renderer.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">StretchedRenderer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/stretched-renderer&#39;</span><span class="p">)</span>
+
+<span class="kr">const</span> <span class="nx">colorRamp</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">150</span><span class="p">]];</span>
+<span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StretchedRenderer</span><span class="p">(</span><span class="nx">colorRamp</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">renderer</span><span class="o">:</span> <span class="nx">renderer</span><span class="p">});</span>
+
+<span class="kr">const</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">getTileImage</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">pngImageDataUrl</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">toDataURL</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rgisfile-generatetiles-z1-z2-dirpath">
+<span id="id30"></span><h5>1.1.12. RGisFile.generateTiles(z1, z2, dirPath)<a class="headerlink" href="#rgisfile-generatetiles-z1-z2-dirpath" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">z1</span></code> - start zoom level</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z2</span></code> - end zoom level</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dirPath</span></code> - directory where the generated tiles to be stored</p></li>
+</ul>
+<p>Generates and stores tile images for the specified zoom levels for the RGisFile. It uses whichever renderer is passed while creating the object or uses the existing one/default renderer.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">StretchedRenderer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/stretched-renderer&#39;</span><span class="p">)</span>
+
+<span class="kr">const</span> <span class="nx">colorRamp</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">150</span><span class="p">]];</span>
+<span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StretchedRenderer</span><span class="p">(</span><span class="nx">colorRamp</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">renderer</span><span class="o">:</span> <span class="nx">renderer</span><span class="p">});</span>
+
+<span class="k">try</span><span class="p">{</span>
+    <span class="nx">await</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">generateTiles</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;./tiles/&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Tiles are generated&quot;</span><span class="p">);</span>
+<span class="p">}</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Failed to generate tiles&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </div>
 </div>
 </div>
+<div class="section" id="class-band">
+<span id="id31"></span><h3>1.2. Class Band<a class="headerlink" href="#class-band" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="band-accessors">
+<span id="id32"></span><h4>Band accessors<a class="headerlink" href="#band-accessors" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="band-getvalueat-x-y">
+<span id="id33"></span><h5>1.4.1. Band.getValueAt(x, y)<a class="headerlink" href="#band-getvalueat-x-y" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> - x coordinate of the pixel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code> - x coordinate of the pixel</p></li>
+</ul>
+<p>Returns the pixel value at the specified geometric coordinates.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">band</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kr">const</span> <span class="nx">pixelValue</span> <span class="o">=</span> <span class="nx">band</span><span class="p">.</span><span class="nx">getValueAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">51</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Value at </span><span class="si">${</span><span class="nx">x</span><span class="si">}</span><span class="sb">, </span><span class="si">${</span><span class="nx">y</span><span class="si">}</span><span class="sb"> is </span><span class="si">${</span><span class="nx">pixelValue</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="band-todataurl-x-y">
+<span id="band-todataurl"></span><h5>1.4.2. Band.toDataUrl(x, y)<a class="headerlink" href="#band-todataurl-x-y" title="Permalink to this headline">¶</a></h5>
+<p>Returns rendered data as a png data url using the specified renderer.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">band</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kr">const</span> <span class="nx">dataUrl</span> <span class="o">=</span> <span class="nx">band</span><span class="p">.</span><span class="nx">toDataUrl</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="band-gettileimage-x-y-z">
+<span id="id34"></span><h5>1.4.3. Band.getTileImage(x, y, z)<a class="headerlink" href="#band-gettileimage-x-y-z" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> - tile coordinate x</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code> - tile coordinate y</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z</span></code> - tile coordinate z (Zoom level)</p></li>
+</ul>
+<p>Returns a canvas object with rendered data of the band. It uses whichever renderer is passed while creating the object or uses the existing one/default renderer.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">band</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kr">const</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="nx">band</span><span class="p">.</span><span class="nx">getTileImage</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="band-generatetiles-z1-z2-dirpath">
+<span id="id35"></span><h5>1.4.4. Band.generateTiles(z1, z2, dirPath)<a class="headerlink" href="#band-generatetiles-z1-z2-dirpath" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">z1</span></code> - start zoom level</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z2</span></code> - end zoom level</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dirPath</span></code> - directory where the generated tiles to be stored</p></li>
+</ul>
+<p>Generates and stores tile images for the specified zoom levels for the band. It uses whichever renderer is passed while creating the object or uses the existing one/default renderer.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">StretchedRenderer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/stretched-renderer&#39;</span><span class="p">)</span>
+
+<span class="kr">const</span> <span class="nx">colorRamp</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">150</span><span class="p">]];</span>
+<span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StretchedRenderer</span><span class="p">(</span><span class="nx">colorRamp</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">renderer</span><span class="o">:</span> <span class="nx">renderer</span><span class="p">});</span>
+<span class="kr">const</span> <span class="nx">band</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+<span class="k">try</span><span class="p">{</span>
+    <span class="nx">await</span> <span class="nx">band</span><span class="p">.</span><span class="nx">generateTiles</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;./tiles/&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Tiles are generated&quot;</span><span class="p">);</span>
+<span class="p">}</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Failed to generate tiles&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="band-saveaspng-filepath">
+<span id="id36"></span><h5>1.4.5. Band.saveAsPng(filePath)<a class="headerlink" href="#band-saveaspng-filepath" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the rendered png image</p></li>
+</ul>
+<p>Stores the rendered png image for the band in the specified location. The image is rendered based on the passed renderer specified or default renderer will be used.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">band</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="nx">await</span> <span class="nx">band</span><span class="p">.</span><span class="nx">saveAsPng</span><span class="p">(</span><span class="s1">&#39;data.png&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="band-savetileaspng-x-y-z-filepath">
+<span id="id37"></span><h5>1.4.6. Band.saveTileAsPng(x, y, z, filePath)<a class="headerlink" href="#band-savetileaspng-x-y-z-filepath" title="Permalink to this headline">¶</a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> - tile coordinate x</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code> - tile coordinate y</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z</span></code> - tile coordinate z (Zoom level)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filePath</span></code> - File location to store the rendered png tile image</p></li>
+</ul>
+<p>Generates and saves a particular tile in the specified location.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">fromGeoTiff</span><span class="p">(</span><span class="s1">&#39;data.tif&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">band</span> <span class="o">=</span> <span class="nx">rgf</span><span class="p">.</span><span class="nx">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="nx">await</span> <span class="nx">band</span><span class="p">.</span><span class="nx">saveTileAsPng</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;data.png&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="renderers">
+<span id="id38"></span><h3>1.3. Renderers<a class="headerlink" href="#renderers" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="class-stretchedrenderer-colorramp">
+<span id="class-stretchedrenderer"></span><h4>1.3.1. Class StretchedRenderer([colorRamp])<a class="headerlink" href="#class-stretchedrenderer-colorramp" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">colorRamp</span> <span class="pre">[optional]</span></code> - 2D array of integers which represents rgba color values.</p></li>
+</ul>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">StretchedRenderer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/stretched-renderer&#39;</span><span class="p">)</span>
+
+<span class="kr">const</span> <span class="nx">colorRamp</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">150</span><span class="p">]];</span>
+<span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StretchedRenderer</span><span class="p">(</span><span class="nx">colorRamp</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="class-classifiedrenderer-classes">
+<span id="class-classifiedrenderer"></span><h4>1.3.2. Class ClassifiedRenderer([classes])<a class="headerlink" href="#class-classifiedrenderer-classes" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">classes</span></code> - an array of objects each of which has the minimum and the maximum value for the specified rgba color value(class).</p></li>
+</ul>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">ClassifiedRenderer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/classified-renderer&#39;</span><span class="p">)</span>
+
+<span class="kr">const</span> <span class="nx">classes</span> <span class="o">=</span> <span class="p">[{</span> <span class="nx">min</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="nx">max</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">color</span><span class="o">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">100</span><span class="p">]},</span> <span class="p">{</span> <span class="nx">min</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span> <span class="nx">max</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">color</span><span class="o">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">]}];</span>
+<span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ClassifiedRenderer</span><span class="p">(</span><span class="nx">classes</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="misc">
+<span id="id39"></span><h3>1.4. Misc<a class="headerlink" href="#misc" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="rasteroptions">
+<span id="id40"></span><h4>1.4.1 RasterOptions<a class="headerlink" href="#rasteroptions" title="Permalink to this headline">¶</a></h4>
+<p>RasterOptions is optionally passed as an argument while creating instance of the RGisFile.</p>
+<table class="colwidths-given table">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>parameter</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bbox</span> <span class="pre">[optional]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></td>
+<td><p>Bounding box of the region that is to be filtered <br> from the original data. <br> <br> Eg: <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">attrs</span> <span class="pre">[optional]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></td>
+<td><p>array of json objects. The number of elements in the array <br> should be equal to the number of bands. <br> <br> Eg: <code class="docutils literal notranslate"><span class="pre">[{name:</span> <span class="pre">&quot;Band</span> <span class="pre">1&quot;},</span> <span class="pre">{name:</span> <span class="pre">&quot;Band</span> <span class="pre">2&quot;}]</span> <span class="pre">//(2</span> <span class="pre">bands)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">renderer</span> <span class="pre">[optional]</span></code></p></td>
+<td><p>any type of Renderer (<code class="docutils literal notranslate"><span class="pre">StretchedRenderer</span> <span class="pre">|</span> <span class="pre">ClassifiedRenderer</span></code>)</p></td>
+<td><p>An instance of renderer class is passed to override default <br> or existing renderer in the data</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">readAs</span> <span class="pre">[optional]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">object</span></code></p></td>
+<td><p>This option can be used when the desired output data type is <br> different than the source datatype. Applying factor, it can <br> effectively store float data as integer(small size) with the <br> cost losing the precision. <br> <br> Eg: <code class="docutils literal notranslate"><span class="pre">{type:</span> <span class="pre">PixelType.FLOAT32,</span> <span class="pre">factor:</span> <span class="pre">1}</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">RGisFile</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">StretchedRenderer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/stretched-renderer&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="p">{</span><span class="nx">PixelType</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/constants&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;data.rgisf&#39;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">bbox</span><span class="o">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">26</span><span class="p">],</span>
+    <span class="nx">attrs</span><span class="o">:</span> <span class="p">[{</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Band 1&quot;</span><span class="p">}],</span>
+    <span class="nx">renderer</span><span class="o">:</span> <span class="k">new</span> <span class="nx">StretchedRenderer</span><span class="p">(),</span>
+    <span class="nx">readAs</span><span class="o">:</span> <span class="p">{</span><span class="nx">type</span><span class="o">:</span> <span class="nx">PixelType</span><span class="p">.</span><span class="nx">INT16</span><span class="p">,</span> <span class="nx">factor</span><span class="o">:</span> <span class="mi">100</span><span class="p">},</span> <span class="c1">// multiplies original data by factor of 100 and converts it to 16-integer.</span>
+<span class="p">};</span>
+<span class="kr">const</span> <span class="nx">rgf</span> <span class="o">=</span> <span class="nx">RGisFile</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pixeltype">
+<span id="id41"></span><h4>1.4.2 PixelType<a class="headerlink" href="#pixeltype" title="Permalink to this headline">¶</a></h4>
+<p>The following are the currently supported PixelTypes in RGisFile. These pre-defined types are defined in the <code class="docutils literal notranslate"><span class="pre">'rgisf/constants'</span></code> module. These types are to be used for specifying the data type to read if the source data is different. Check the <code class="docutils literal notranslate"><span class="pre">readAs</span></code> attribute of <code class="docutils literal notranslate"><span class="pre">RasterOptions</span></code>.</p>
+<table class="colwidths-given table">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size (bytes)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">INT8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8-bit</span> <span class="pre">integer</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INT16</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">16-bit</span> <span class="pre">integer</span></code></p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">INT32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">32-bit</span> <span class="pre">integer</span></code></p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">UINT8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8-bit</span> <span class="pre">unsigned</span> <span class="pre">integer</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">UINT16</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">16-bit</span> <span class="pre">unsigned</span> <span class="pre">integer</span></code></p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">UINT32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">32-bit</span> <span class="pre">unsigned</span> <span class="pre">integer</span></code></p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FLOAT32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FLOAT64</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>8</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="kr">const</span> <span class="p">{</span><span class="nx">PixelType</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;rgisf/constants&#39;</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">PixelType</span><span class="p">.</span><span class="nx">INT8</span><span class="p">);</span>
+<span class="c1">//prints &quot;{type:3, size:1}&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
-           </div>
-           
-          </div>
-          <footer>
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Manivannan K.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
         </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Manivannan K<br/>
+        
+            &copy; Copyright 2021, Manivannan K.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
       </div>
-
-    </section>
-
-  </div>
+    </div>
   
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
 
   
-  
-    
-   
-
-</body>
+  </body>
 </html>
