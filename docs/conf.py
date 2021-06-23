@@ -28,7 +28,6 @@ author = 'Manivannan K'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-'sphinx_book_theme'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -46,7 +45,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 #
 #html_theme = 'alabaster'
-html_theme = "sphinx_book_theme"
+html_theme = "sizzle"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
