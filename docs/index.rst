@@ -8,7 +8,7 @@ RGisF
     |br| **Next release:** independent browser support + CRS:3857
 
 .. toctree::
-    :numbered:
+   :maxdepth: 5
 
 
 *************
