@@ -1,11 +1,11 @@
-######################
-RGisF
-######################
+############################
+RGisF version: 1.0.23-alpha
+############################
 
     RGisF is a collection of helper methods to work with raster data mainly in web applications. It saves data in a customized format ``.rgisf`` (compressed: default) or ``.urgisf`` (uncompressed) data and can be read using any of the client libraries. Please, check the use cases for using this format and library for more details.
 
-    |br| **Note:** Currently, it is only available in NodeJs and only supports coordinate system CRS:4326. Support to more frameworks and coordinates system will be added soon.
-    |br| **Next release:** independent browser support + CRS:3857
+    |br| **Note:** Currently, it is only available in NodeJs and only supports coordinate system EPSG 4326. Support to more frameworks and coordinates system will be added soon.
+    |br| **Next release:** Independent browser support + EPSG 3857
 
 .. toctree::
    :maxdepth: 5
