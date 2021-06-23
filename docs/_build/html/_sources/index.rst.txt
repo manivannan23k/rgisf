@@ -798,8 +798,11 @@ The following are the currently supported PixelTypes in RGisFile. These pre-defi
 
 
 
+*************
+2. Use cases
+*************
 
-
+Coming soon
 
 
 
