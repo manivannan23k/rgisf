@@ -7,6 +7,7 @@ RGisF version: 1.0.23-alpha
     |br| **Note:** Currently, it is only available in NodeJs and only supports coordinate system EPSG 4326. Support to more frameworks and coordinates system will be added soon.
     |br| **Next release:** Independent browser support + EPSG 3857
 
+
 .. toctree::
    :maxdepth: 5
 
