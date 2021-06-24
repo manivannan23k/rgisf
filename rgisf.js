@@ -229,7 +229,7 @@ class RGisFile{
             const bandBuffer = band.getRegion(fx1, fy1, fx2, fy2)
             buffer = Buffer.concat([buffer, bandBuffer]);
         }
-        return RGisFile.fromUncompressedBuffer(buffer);
+        return RGisFile.fromUBuffer(buffer);
     }
 
     //noinspection JSUnusedGlobalSymbols
@@ -334,19 +334,21 @@ class RGisFile{
             nx: this.rasterMeta['nx'],
             ny: this.rasterMeta['ny'],
         };
-        return {
-            vt: fvt,
-            nb,
-            crs: defaultCrs,
-            x1: fx1,
-            y1: fy1,
-            x2: fx2,
-            y2: fy2,
-            xRes: fxRes,
-            yRes: fyRes,
-            nx: fnx,
-            ny: fny
-        };
+        return new RasterMetadata(
+            {
+                vt: fvt,
+                nb,
+                crs: defaultCrs,
+                x1: fx1,
+                y1: fy1,
+                x2: fx2,
+                y2: fy2,
+                xRes: fxRes,
+                yRes: fyRes,
+                nx: fnx,
+                ny: fny
+            }
+        );
     }
 
 

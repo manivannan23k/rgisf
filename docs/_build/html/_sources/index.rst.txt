@@ -7,15 +7,16 @@ RGisF version: 1.0.23-alpha
     |br| **Note:** Currently, it is only available in NodeJs and only supports coordinate system EPSG 4326. Support to more frameworks and coordinates system will be added soon.
     |br| **Next release:** Independent browser support + EPSG 3857
 
+
 .. toctree::
    :maxdepth: 5
 
 
 **************************
-1. Docs (NodeJs)
+1. Docs: NodeJs
 **************************
 
-* `1.1. Class RGisFile`_
+* `Class RGisFile`_
     * `Static methods`_
         * `static RGisFile.from(data, [options], [isCompressed=true])`_
         * `static RGisFile.fromGeoTiff(data, [options])`_
@@ -46,7 +47,7 @@ RGisF version: 1.0.23-alpha
         * `RGisFile.getBands()`_
         * `RGisFile.getTileImage(x, y, z)`_
         * `RGisFile.generateTiles(z1, z2, dirPath)`_
-* `1.2. Class Band`_
+* `Class Band`_
     * `Methods`_
         * `Band.getValueAt(x, y)`_
         * `Band.toDataUrl()`_
@@ -54,14 +55,14 @@ RGisF version: 1.0.23-alpha
         * `Band.saveTileAsPng(x, y, z, filePath)`_
         * `Band.getTileImage(x, y, z)`_
         * `Band.generateTiles(z1, z2, dirPath)`_
-* `1.3. Renderers`_
+* `Renderers`_
     * `Class StretchedRenderer`_
     * `Class ClassifiedRenderer`_
-* `1.4. Misc`_
+* `Misc`_
     * `RasterOptions`_
 
 
-.. _1.1. Class RGisFile:
+.. _Class RGisFile:
 
 ======================
 1.1. Class: RGisFile
@@ -531,7 +532,7 @@ Generates and stores tile images for the specified zoom levels for the RGisFile.
 
 
 
-.. _1.2. Class Band:
+.. _Class Band:
 
 ==========================
 1.2. Class Band
@@ -544,7 +545,7 @@ Band accessors
 
 .. _Band.getValueAt(x, y):
 
-1.4.1. Band.getValueAt(x, y)
+1.2.1. Band.getValueAt(x, y)
 =========================================================================
 * ``x`` - x coordinate of the pixel
 * ``y`` - x coordinate of the pixel
@@ -561,7 +562,7 @@ Returns the pixel value at the specified geometric coordinates.
 
 .. _Band.toDataUrl():
 
-1.4.2. Band.toDataUrl(x, y)
+1.2.2. Band.toDataUrl(x, y)
 =========================================================================
 
 Returns rendered data as a png data url using the specified renderer.
@@ -575,7 +576,7 @@ Returns rendered data as a png data url using the specified renderer.
 
 .. _Band.getTileImage(x, y, z):
 
-1.4.3. Band.getTileImage(x, y, z)
+1.2.3. Band.getTileImage(x, y, z)
 =========================================================================
 * ``x`` - tile coordinate x
 * ``y`` - tile coordinate y
@@ -593,7 +594,7 @@ Returns a canvas object with rendered data of the band. It uses whichever render
 
 .. _Band.generateTiles(z1, z2, dirPath):
 
-1.4.4. Band.generateTiles(z1, z2, dirPath)
+1.2.4. Band.generateTiles(z1, z2, dirPath)
 =========================================================================
 
 * ``z1`` - start zoom level
@@ -622,7 +623,7 @@ Generates and stores tile images for the specified zoom levels for the band. It 
 
 .. _Band.saveAsPng(filePath):
 
-1.4.5. Band.saveAsPng(filePath)
+1.2.5. Band.saveAsPng(filePath)
 =========================================================================
 
 * ``filePath`` - File location to store the rendered png image
@@ -639,7 +640,7 @@ Stores the rendered png image for the band in the specified location. The image 
 
 .. _Band.saveTileAsPng(x, y, z, filePath):
 
-1.4.6. Band.saveTileAsPng(x, y, z, filePath)
+1.2.6. Band.saveTileAsPng(x, y, z, filePath)
 ==================================================================
 
 * ``x`` - tile coordinate x
@@ -657,7 +658,7 @@ Generates and saves a particular tile in the specified location.
     await band.saveTileAsPng(23, 14, 5, 'data.png');
 
 
-.. _1.3. Renderers:
+.. _Renderers:
 
 ==========================
 1.3. Renderers
@@ -694,7 +695,7 @@ Generates and saves a particular tile in the specified location.
     const renderer = new ClassifiedRenderer(classes);
 
 
-.. _1.4. Misc:
+.. _Misc:
 
 ==========================
 1.4. Misc
@@ -798,10 +799,53 @@ The following are the currently supported PixelTypes in RGisFile. These pre-defi
 
 
 *************
-2. Tutorials
+2. Docs: Web
 *************
 
-    Will be added shortly
+Support for client side usage with limited features which includes reading and rendering raster data. Currently, web client(browser) library is not supporting:
+* Reading GeoTiff
+* Accessing filesystems
+* Generating tiles
+
+    You can get the browser build from this CDN link: https://cdn.jsdelivr.net/npm/rgisf@latest/rgisf.browser.js
+
+The following are the supported features:
+
+* `Class RGisFile`_
+    * `Static methods`_
+        * `static RGisFile.from(data, [options], [isCompressed=true])`_
+        * `static RGisFile.fromBuffer(buffer, [options])`_
+        * `static RGisFile.fromUBuffer(buffer, [options])`_
+        * `static RGisFile.fromUrl(url, [options])`_
+        * `static RGisFile.fromUUrl(url, [options])`_
+        * `static RGisFile.combine(rgFiles, [options])`_
+    * `Methods`_
+        * `RGisFile.toBuffer()`_
+        * `RGisFile.toCompressedBuffer()`_
+        * `RGisFile.toDataUrl()`_
+        * `RGisFile.getMetaData()`_
+        * `RGisFile.getBbox()`_
+        * `RGisFile.getNoOfBands()`_
+        * `RGisFile.getCoordinateSystem()`_
+        * `RGisFile.getXResolution()`_
+        * `RGisFile.getYResolution()`_
+        * `RGisFile.getWidth()`_
+        * `RGisFile.getHeight()`_
+        * `RGisFile.getBands()`_
+        * `RGisFile.getTileImage(x, y, z)`_
+* `Class Band`_
+    * `Methods`_
+        * `Band.getValueAt(x, y)`_
+        * `Band.toDataUrl()`_
+        * `Band.getTileImage(x, y, z)`_
+* `Renderers`_
+    * `Class StretchedRenderer`_
+    * `Class ClassifiedRenderer`_
+* `Misc`_
+    * `RasterOptions`_
+
+
+
 
 
 
